@@ -1,0 +1,44 @@
+name: Refresh BibBase cache
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - publications.bib
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: refresh-bibbase
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Wait for the raw file to propagate
+        run: sleep 20
+
+      - name: Fetch the latest bibliography through BibBase
+        shell: bash
+        run: |
+          set -euo pipefail
+          BIBBASE_URL='https://bibbase.org/show?bib=https://raw.githubusercontent.com/Changwook-Jeong/publications-bib/main/publications.bib&filter=type:%28article%7Cinproceedings%29&groupby=year&sort=month&highlight=Jeong&theme=mila&commas=1&hidemenu=true&nocache=1'
+
+          for attempt in 1 2 3; do
+            if curl --fail --silent --show-error --location --max-time 90 "$BIBBASE_URL" > /dev/null; then
+              echo "BibBase refreshed on attempt $attempt."
+              exit 0
+            fi
+
+            if [ "$attempt" -lt 3 ]; then
+              sleep $((attempt * 20))
+            fi
+          done
+
+          echo "BibBase refresh failed after 3 attempts." >&2
+          exit 1
