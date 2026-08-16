@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - publications.bib
+      - .github/workflows/refresh-bibbase.yml
   workflow_dispatch:
 
 permissions:
