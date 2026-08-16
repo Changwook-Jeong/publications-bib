@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
   <title>Publications · Jeong Research Group</title>
+  <script>
+    if (new URLSearchParams(window.location.search).get('embed') === '1') {
+      document.documentElement.classList.add('embed');
+    }
+  </script>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -36,7 +41,7 @@
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.35-4.35m2.35-5.65a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z"/></svg>
         <input id="publication-search" type="search" placeholder="Search title, author, or venue">
       </label>
-      <p class="notation"><strong>Author notation</strong> <span><sup>*</sup> Corresponding author</span><span><sup>†</sup> Equal contribution</span></p>
+      <p class="notation"><strong>Author notation</strong> <span><sup>*</sup> Corresponding author</span><span><sup>†</sup> Equal contribution</span><span><u>Underlined</u> group member</span></p>
     </section>
 
     <div id="publication-list" aria-live="polite">

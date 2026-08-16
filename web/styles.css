@@ -182,6 +182,12 @@ main {
 .authors, .venue { margin: 8px 0 0; }
 .authors { color: #405157; font-size: .94rem; }
 .author.pi { color: var(--accent-dark); font-weight: 760; }
+.author.member {
+  text-decoration-line: underline;
+  text-decoration-color: rgba(53, 109, 123, .62);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: .16em;
+}
 .author sup { position: relative; top: -.08em; margin-left: 1px; color: var(--accent-dark); font-weight: 850; }
 .venue { color: var(--muted); font-size: .91rem; font-style: italic; }
 
@@ -227,6 +233,23 @@ footer {
 
 footer p { margin: 0; }
 
+/* Google Sites should embed the publication controls and records, while the
+   standalone preview keeps its own branded header and footer. */
+.embed .site-header,
+.embed footer {
+  display: none;
+}
+
+.embed main {
+  width: min(var(--max-width), calc(100% - 32px));
+  padding-top: 10px;
+  padding-bottom: 30px;
+}
+
+.embed .controls {
+  padding-top: 8px;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -262,6 +285,8 @@ footer p { margin: 0; }
   .authors, .venue { font-size: .87rem; }
   .publication-year { padding-top: 2px; font-size: 1.15rem; }
   footer { flex-direction: column; padding: 25px 17px; }
+  .embed main { width: calc(100% - 28px); padding-top: 4px; }
+  .embed .filters { margin-right: 0; padding-right: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {

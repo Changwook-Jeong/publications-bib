@@ -37,7 +37,21 @@ Alternatively, add a record to `author-roles.json` using its BibTeX citation key
 }
 ```
 
-Names are matched after punctuation, spaces, and BibTeX formatting have been normalized. No marker is inferred from author order; role data must be explicit.
+Names are matched after punctuation, spaces, and BibTeX formatting have been normalized. No role is inferred from author order except for the PI rules explicitly recorded in `_rules`.
+
+The initial repository mapping was transcribed from the role legends and explicit author markers in the PI's CV and accomplishments statement. A configured role is tested against the current BibTeX author list during every build.
+
+The group roster in `group-members.json` is matched to publication authors and rendered with an underline. Corresponding-author rules supplied by the PI are kept in `_rules` within `author-roles.json`; explicit per-paper records still take precedence and can add co-corresponding or equal-contribution authors.
+
+## Google Sites embed
+
+Use the following URL for the Google Sites **Embed → By URL** block:
+
+```text
+https://changwook-jeong.github.io/publications-bib/?embed=1
+```
+
+The `embed=1` view hides the standalone GitHub Pages header and footer, leaving the white filters and publication records for integration into the Google Sites page. The normal URL keeps the complete branded standalone layout.
 
 ## Deployment
 

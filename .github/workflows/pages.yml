@@ -8,6 +8,7 @@ on:
     paths:
       - publications.bib
       - author-roles.json
+      - group-members.json
       - scripts/**
       - web/**
       - .github/workflows/pages.yml

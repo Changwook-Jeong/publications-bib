@@ -224,6 +224,22 @@ def role_names(entry: BibEntry, roles: dict[str, object], role: str) -> list[str
     raw_field = entry.fields.get(field_name, "")
     if raw_field:
         names.extend(re.split(r"\s*;\s*", clean_tex(raw_field)))
+
+    if role == "corresponding" and entry_category(entry) in {"journals", "conferences"}:
+        authors = split_authors(entry.fields.get("author", ""))
+        pi_names = [display_author(author) for author in authors if is_pi(author)]
+        rules = roles.get("_rules", {})
+        if isinstance(rules, dict) and pi_names:
+            if rules.get("pi_last_author_is_corresponding") and authors and is_pi(authors[-1]):
+                names.extend(pi_names)
+            year_rules = rules.get("pi_corresponding_by_year", {})
+            if isinstance(year_rules, dict):
+                year_rule = year_rules.get(str(entry_year(entry)), {})
+                if isinstance(year_rule, dict):
+                    categories = year_rule.get("categories", [])
+                    excluded = year_rule.get("exclude_keys", [])
+                    if entry_category(entry) in categories and entry.key not in excluded:
+                        names.extend(pi_names)
     return [name for name in names if name]
 
 
@@ -288,23 +304,41 @@ def compact_bibtex(entry: BibEntry) -> str:
     return "\n".join(lines)
 
 
-def render_authors(entry: BibEntry, roles: dict[str, object]) -> str:
+def load_members(path: Path) -> list[str]:
+    if not path.exists():
+        return []
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        return []
+    members: list[str] = []
+    for key, value in data.items():
+        if not key.startswith("_") and isinstance(value, list):
+            members.extend(str(item) for item in value)
+    return members
+
+
+def render_authors(entry: BibEntry, roles: dict[str, object], members: list[str] | None = None) -> str:
     corresponding = role_names(entry, roles, "corresponding")
     equal = role_names(entry, roles, "equal")
+    members = members or []
     rendered: list[str] = []
     for raw_name in split_authors(entry.fields.get("author", "")):
         name = html.escape(display_author(raw_name))
-        classes = "author pi" if is_pi(raw_name) else "author"
+        classes = ["author"]
+        if is_pi(raw_name):
+            classes.append("pi")
+        elif name_has_role(raw_name, members):
+            classes.append("member")
         marks = ""
         if name_has_role(raw_name, corresponding):
             marks += '<sup title="Corresponding author">*</sup>'
         if name_has_role(raw_name, equal):
             marks += '<sup title="Equal contribution">†</sup>'
-        rendered.append(f'<span class="{classes}">{name}{marks}</span>')
+        rendered.append(f'<span class="{" ".join(classes)}">{name}{marks}</span>')
     return ", ".join(rendered)
 
 
-def render_entry(entry: BibEntry, roles: dict[str, object]) -> str:
+def render_entry(entry: BibEntry, roles: dict[str, object], members: list[str] | None = None) -> str:
     category = entry_category(entry)
     year = entry_year(entry)
     title = html.escape(clean_title(entry.fields.get("title", "Untitled")))
@@ -326,7 +360,7 @@ def render_entry(entry: BibEntry, roles: dict[str, object]) -> str:
       <article class="publication" data-category="{category}" data-year="{year}" data-search="{html.escape(search_text)}">
         <div class="publication-main">
           <h3>{title}</h3>
-          <p class="authors">{render_authors(entry, roles)}</p>
+          <p class="authors">{render_authors(entry, roles, members)}</p>
           <p class="venue">{citation}</p>
           <div class="publication-links">{' '.join(links)}</div>
           <details><summary>BibTeX</summary><pre>{bibtex}</pre></details>
@@ -342,7 +376,12 @@ def load_roles(path: Path) -> dict[str, object]:
     return data if isinstance(data, dict) else {}
 
 
-def build_page(entries: list[BibEntry], roles: dict[str, object], template: str) -> str:
+def build_page(
+    entries: list[BibEntry],
+    roles: dict[str, object],
+    template: str,
+    members: list[str] | None = None,
+) -> str:
     visible = [entry for entry in entries if entry.entry_type in {"article", "inproceedings", "conference", "proceedings", "patent"}]
     visible.sort(key=lambda item: (-entry_year(item), -entry_month(item), clean_title(item.fields.get("title", "")).lower()))
     grouped: dict[int, list[BibEntry]] = {}
@@ -350,7 +389,7 @@ def build_page(entries: list[BibEntry], roles: dict[str, object], template: str)
         grouped.setdefault(entry_year(entry), []).append(entry)
     sections = []
     for year, year_entries in grouped.items():
-        cards = "\n".join(render_entry(entry, roles) for entry in year_entries)
+        cards = "\n".join(render_entry(entry, roles, members) for entry in year_entries)
         sections.append(f'<section class="year-section" data-year-section="{year}"><h2>{year or "Undated"}</h2>{cards}</section>')
     counts = {
         "all": len(visible),
@@ -366,12 +405,18 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--bib", type=Path, default=Path("publications.bib"))
     parser.add_argument("--roles", type=Path, default=Path("author-roles.json"))
+    parser.add_argument("--members", type=Path, default=Path("group-members.json"))
     parser.add_argument("--template", type=Path, default=Path("web/index.template.html"))
     parser.add_argument("--output", type=Path, default=Path("_site"))
     args = parser.parse_args()
 
     entries = parse_bibtex(args.bib.read_text(encoding="utf-8-sig"))
-    page = build_page(entries, load_roles(args.roles), args.template.read_text(encoding="utf-8"))
+    page = build_page(
+        entries,
+        load_roles(args.roles),
+        args.template.read_text(encoding="utf-8"),
+        load_members(args.members),
+    )
     args.output.mkdir(parents=True, exist_ok=True)
     (args.output / "index.html").write_text(page, encoding="utf-8")
     for asset in ("styles.css", "app.js"):
