@@ -480,6 +480,22 @@
   publisher = {Google Patents}
 }
 
+@misc{jeongDimensionlessPhysicsRobust2026,
+  type = {Invited {{Talk}}},
+  title = {Dimensionless {{Physics}} for {{Robust AI Surrogates}} in {{Semiconductor Multiphysics Simulation}}},
+  author = {Jeong, Changwook},
+  year = 2026,
+  month = aug,
+  address = {Sejong University Convention Center, Seoul, Korea},
+  urldate = {2026-08-16},
+  abstract = {Machine-learning surrogate models are increasingly used to accelerate physics-based simulations in semiconductor research and manufacturing. However, their industrial deployment remains limited by poor robustness under out-of-distribution conditions. In semiconductor applications such as thermal analysis, mechanical stress prediction, process-aware device modeling, and layout-scale multiphysics simulation, input parameters often vary over wide ranges of physical units, dimensions, material properties, and operating conditions. Standard neural surrogates can therefore fail under scale shifts, even when the governing physics remains unchanged. This talk presents a physics-invariant approach to robust surrogate modeling based on the Buckingham {$\pi$} theorem. The key idea is that some apparent distribution shifts are not changes in the underlying physics, but changes in dimensional scale. When a physical system is described by dimensionless {$\pi$}-groups, inputs with different dimensional variables may still belong to the same physical equivalence class. This provides a principled route to improving surrogate-model reliability without retraining or modifying the original model. The proposed method performs Buckingham {$\pi$}-invariant test-time projection. Given a test input, it moves the input toward the training distribution while preserving the governing dimensionless invariants. The projection is formulated as a log-space least-squares problem and can be accelerated using centroid-based reduction, enabling scalable application to large simulation datasets. Representative examples in two-dimensional thermal conduction and linear elasticity will be discussed. These problems are relevant to semiconductor simulations where temperature fields, stress fields, and layout-dependent material responses must be predicted rapidly across broad process and design spaces. The results show that {$\pi$}-invariant projection can improve the out-of-distribution robustness of neural PDE surrogates while remaining training-free and model-agnostic. More broadly, this work suggests that embedding dimensional consistency and physical equivalence into AI workflows can make semiconductor simulation models more robust, interpretable, and transferable.},
+  langid = {english},
+  keywords = {CCP2026,invited talk},
+  annotation = {Presentation ID: I-T14-009\\
+Presentation Time: 14:30--15:00\\
+Conference Dates: 2026-08-09--2026-08-14}
+}
+
 @article{jeongElectronicStructureEngineering2011b,
   title = {On Electronic Structure Engineering and Thermoelectric Performance},
   author = {Jeong, Changwook and Lundstrom, Mark},
@@ -1440,10 +1456,18 @@
 
 @inproceedings{parkNeuralDomainDecomposition2026,
   title = {Neural {{Domain Decomposition}} for {{Scalable Multi-Physics}}: {{Chip-Scale Thermal-Stress Analysis}}},
-  author = {Park, Min-Chul},
+  booktitle = {63rd {{Design Automation Conference}} ({{DAC}} 2026)},
+  author = {Park, Min-Chul and Lee, Ji-Hye and Lee, Sungyeop and Hong, Giyong and Lee, Seokki and Huh, In and Park, Hong-hyun and Jang, Hyunjae and Jeong, Changwook and Kim, Young-Gu and Kim, Dae Sin},
   year = 2026,
-  abstract = {Large neural surrogate models accelerate scientific simulation but still face scalability limits from model size and memory. We present FP-DDM (Foundation-model-based Physics-guided adaptation for the Domain Decomposition Method), a scalable framework for large-scale physics analysis. FP-DDM divides the domain into overlapping subdomains and enforces interface consistency by explicitly optimizing boundary values on overlaps via automatic differentiation, enabling fast alignment. Specifically, we propose a foundation architecture that effectively learns multi-physics and transfers to new domains. The combination of foundation-model adaptation and physics-guided test-time adaptation enables generalization to new physics and unseen domains without labels. On thermal and stress problems, FP-DDM achieves numerical-solver-level accuracy, scales to 10-billion-cell domains, and supports layout design optimization, establishing its potential as a multi-physics platform for next-generation system--technology co-optimization.},
-  langid = {english}
+  month = jul,
+  address = {Long Beach Convention Center, Long Beach, California, USA},
+  urldate = {2026-08-16},
+  abstract = {Large neural surrogate models accelerate scientific simulation but still face scalability limits from model size and memory. We present FP-DDM (Foundation-model-based Physics-guided adaptation for the Domain Decomposition Method), a scalable framework for large-scale physics analysis. FP-DDM divides the domain into overlapping subdomains and enforces interface consistency by explicitly optimizing boundary values on overlaps via automatic differentiation, enabling fast alignment. Specifically, we propose a foundation architecture that effectively learns multi-physics and transfers to new domains. The combination of foundation-model adaptation and physics-guided test-time adaptation enables generalization to new physics and unseen domains without labels. On thermal and stress problems, FP-DDM achieves numerical-solver-level accuracy, scales to 10-billion-cell domains, and supports layout design optimization, establishing its potential as a multi-physics platform for next-generation system-technology co-optimization.},
+  langid = {english},
+  keywords = {DAC 2026},
+  annotation = {Event Type: Research Manuscript\\
+Presentation Time: 11:23--11:36 PDT\\
+Room: Meeting Room 101A}
 }
 
 @article{parkPredictionInterpretationPolymer2022b,
