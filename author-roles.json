@@ -1,0 +1,106 @@
+{
+  "_instructions": "Use a BibTeX citation key as each property. Names may be written in display order or BibTeX order. The generator also reads corresponding/equal custom fields exported from Zotero Extra.",
+  "_sources": [
+    "0-CV_정창욱_v9.0.docx",
+    "8-업적기술서_정창욱_v5.0 (2019-2026 기간).docx"
+  ],
+  "_rules": {
+    "pi_last_author_is_corresponding": true,
+    "pi_corresponding_by_year": {
+      "2026": {
+        "categories": ["journals", "conferences"],
+        "exclude_keys": [
+          "islamThicknessScalingRoughnessInduced2026",
+          "shihFastOpticsFreeExtraction2026",
+          "simInterfacialControlDegradation2025"
+        ]
+      }
+    }
+  },
+  "namCharacterizationThermalStability2026": {
+    "corresponding": ["Changwook Jeong", "Peide D. Ye"]
+  },
+  "hanNonPerturbativeOxygenVacancy2026": {
+    "corresponding": ["Changwook Jeong", "Seyoung Kim"]
+  },
+  "parkNeuralDomainDecomposition2026": {
+    "corresponding": ["Changwook Jeong"]
+  },
+  "leeBuckingham$pi$InvariantTestTime2025": {
+    "corresponding": ["Changwook Jeong"],
+    "equal": ["Seokki Lee", "Min-Chul Park", "Giyong Hong"]
+  },
+  "hanContactPhysics2D2025a": {
+    "corresponding": ["Changwook Jeong"],
+    "equal": ["Juwon Han", "Hyeonwoo Lee", "Soon-Yong Kwon"]
+  },
+  "kimMobilityOverestimationThinFilm2025a": {
+    "corresponding": ["Changwook Jeong", "Junghwan Kim"],
+    "equal": ["Soohyun Kim", "Youngjoon Lee"]
+  },
+  "jangInGaZnO4In2O3Mobility2025": {
+    "corresponding": ["Changwook Jeong"],
+    "equal": ["Hyeongjun Jang", "Taehyun Kim"]
+  },
+  "kimEngineeringAmorphousIGZO2025": {
+    "corresponding": ["Changwook Jeong"],
+    "equal": ["Taehyun Kim", "Hyeongjun Jang"]
+  },
+  "hongMLDrivenCompactModels2025b": {
+    "corresponding": ["Changwook Jeong"]
+  },
+  "jangWaferScaleFabricationEdgeContacted2025": {
+    "corresponding": ["Seunguk Song", "Changwook Jeong", "Soon-Yong Kwon"]
+  },
+  "linAnalyzingContactDopingEffect2025a": {
+    "corresponding": ["Peide D. Ye"]
+  },
+  "huhContextInformedNeuralODEs2025a": {
+    "corresponding": ["Changwook Jeong", "Muhammad Alam"]
+  },
+  "parkRealisticScalableTCAD2025": {
+    "corresponding": ["Changwook Jeong"]
+  },
+  "kangFieldInducedOffState2024": {
+    "corresponding": ["Changwook Jeong", "Sangbum Kim"]
+  },
+  "huhIsometricQuotientVariational2024": {
+    "corresponding": ["Changwook Jeong"]
+  },
+  "kimPhaseCentricMOCVDEnabled2024": {
+    "corresponding": ["Sungkyu Kim", "Feng Ding", "Joonki Suh"]
+  },
+  "linEnhancementIn2O3FieldEffect2024a": {
+    "corresponding": ["Peide D. Ye"]
+  },
+  "linFirstDemonstrationTopGate2024": {
+    "corresponding": ["Peide D. Ye"],
+    "equal": ["Jian-Yu Lin", "Zhuocheng Zhang"]
+  },
+  "linQuantumConfinementControlled2024a": {
+    "corresponding": ["Peide D. Ye"],
+    "equal": ["Jian-Yu Lin", "Chang Niu"]
+  },
+  "songFabricationPtype2D2023": {
+    "corresponding": ["Zonghoon Lee", "Soon-Yong Kwon"],
+    "equal": ["Seunguk Song", "Aram Yoon", "Sora Jang"]
+  },
+  "parkPredictionInterpretationPolymer2022b": {
+    "corresponding": ["Youngseon Shim", "Changwook Jeong"]
+  },
+  "kimSimulatorAccelerationInverse2022b": {
+    "corresponding": ["Junhee Seok"]
+  },
+  "myungPACNetModelPruning2022b": {
+    "corresponding": ["Changwook Jeong"]
+  },
+  "jeongBridgingTCADAI2021b": {
+    "corresponding": ["Changwook Jeong"]
+  },
+  "parkLearningStudentfriendlyTeacher2021a": {
+    "corresponding": ["Changwook Jeong"]
+  },
+  "myungRestructuringTCADSystem2021b": {
+    "corresponding": ["Changwook Jeong"]
+  }
+}
