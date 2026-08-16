@@ -1,0 +1,7 @@
+{
+  "_instructions": "Use a BibTeX citation key as each property. Names may be written in display order or BibTeX order. The generator also reads corresponding/equal custom fields exported from Zotero Extra.",
+  "_example_not_applied": {
+    "corresponding": ["Changwook Jeong"],
+    "equal": ["First Author", "Second Author"]
+  }
+}

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Publications · Jeong Research Group</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="https://sites.google.com/view/jeong-research-group/" target="_top">
+        <span class="brand-mark" aria-hidden="true">Ψ</span>
+        <span>Jeong Research Group</span>
+      </a>
+      <div class="header-copy">
+        <p class="eyebrow">SCHOLARLY OUTPUTS</p>
+        <h1>Publications &amp; Patents</h1>
+        <p>Scholarly outputs spanning semiconductor materials, devices, multiscale simulation, and physics-grounded AI.</p>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="controls" aria-label="Publication filters">
+      <div class="filters" role="group" aria-label="Filter by output type">
+        <button class="filter active" type="button" data-filter="all">All <span data-count="all"></span></button>
+        <button class="filter" type="button" data-filter="journals">Journals <span data-count="journals"></span></button>
+        <button class="filter" type="button" data-filter="conferences">Conferences <span data-count="conferences"></span></button>
+        <button class="filter" type="button" data-filter="invited">Invited talks <span data-count="invited"></span></button>
+        <button class="filter" type="button" data-filter="patents">Patents <span data-count="patents"></span></button>
+      </div>
+      <label class="search">
+        <span class="sr-only">Search publications</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.35-4.35m2.35-5.65a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z"/></svg>
+        <input id="publication-search" type="search" placeholder="Search title, author, or venue">
+      </label>
+      <p class="notation"><strong>Author notation</strong> <span><sup>*</sup> Corresponding author</span><span><sup>†</sup> Equal contribution</span></p>
+    </section>
+
+    <div id="publication-list" aria-live="polite">
+      {{PUBLICATIONS}}
+    </div>
+    <p id="empty-state" hidden>No matching records were found.</p>
+  </main>
+
+  <footer>
+    <p>© 2022–2026 Changwook Jeong Research Group</p>
+    <a href="https://sites.google.com/view/jeong-research-group/" target="_top">Return to group website</a>
+  </footer>
+
+  <script>window.PUBLICATION_COUNTS = {{COUNTS_JSON}};</script>
+  <script src="app.js"></script>
+</body>
+</html>
