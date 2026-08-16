@@ -51,6 +51,9 @@
   "jangWaferScaleFabricationEdgeContacted2025": {
     "corresponding": ["Seunguk Song", "Changwook Jeong", "Soon-Yong Kwon"]
   },
+  "linAnalyzingContactDopingEffect2025a": {
+    "corresponding": ["Peide D. Ye"]
+  },
   "huhContextInformedNeuralODEs2025a": {
     "corresponding": ["Changwook Jeong", "Muhammad Alam"]
   },
@@ -63,8 +66,29 @@
   "huhIsometricQuotientVariational2024": {
     "corresponding": ["Changwook Jeong"]
   },
+  "kimPhaseCentricMOCVDEnabled2024": {
+    "corresponding": ["Sungkyu Kim", "Feng Ding", "Joonki Suh"]
+  },
+  "linEnhancementIn2O3FieldEffect2024a": {
+    "corresponding": ["Peide D. Ye"]
+  },
+  "linFirstDemonstrationTopGate2024": {
+    "corresponding": ["Peide D. Ye"],
+    "equal": ["Jian-Yu Lin", "Zhuocheng Zhang"]
+  },
+  "linQuantumConfinementControlled2024a": {
+    "corresponding": ["Peide D. Ye"],
+    "equal": ["Jian-Yu Lin", "Chang Niu"]
+  },
+  "songFabricationPtype2D2023": {
+    "corresponding": ["Zonghoon Lee", "Soon-Yong Kwon"],
+    "equal": ["Seunguk Song", "Aram Yoon", "Sora Jang"]
+  },
   "parkPredictionInterpretationPolymer2022b": {
     "corresponding": ["Youngseon Shim", "Changwook Jeong"]
+  },
+  "kimSimulatorAccelerationInverse2022b": {
+    "corresponding": ["Junhee Seok"]
   },
   "myungPACNetModelPruning2022b": {
     "corresponding": ["Changwook Jeong"]
