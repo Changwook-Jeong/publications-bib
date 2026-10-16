@@ -26,7 +26,7 @@ function fixture(search='') {
   const root=new Element();
   const panels=['papers','patents'].map(kind=>{
     const p=new Element({trendPanel:kind});
-    p.queries['.history-scroll']=Object.assign(new Element(),{scrollWidth:1040,clientWidth:375,scrollLeft:0});
+    p.queries['.history-scroll']=Object.assign(new Element(),{scrollWidth:520,clientWidth:375,scrollLeft:0});
     p.queries['.history-selection-tools']=new Element();
     p.queries['.history-selection-status']=new Element();
     p.queries['.history-close']=new Element();
@@ -36,7 +36,7 @@ function fixture(search='') {
   const years=[];
   const links=[];
   const items=[];
-  for(const kind of ['papers','patents']) for(const year of ['2007','2026']) {
+  for(const kind of ['papers','patents']) for(const year of ['2022','2026']) {
     const p=new Element({historyPanel:kind+'-'+year,historyCount:'1'});
     const item=new Element({historyItem:kind+year});
     p.children.push(item);items.push(item);years.push(p);
@@ -60,7 +60,7 @@ test('default paper view and mobile scroll start at recent years',()=>{
   assert.equal(f.panels[0].hidden,false);
   assert.equal(f.panels[1].hidden,true);
   assert.equal(f.buttons[0].attrs['aria-pressed'],'true');
-  assert.equal(f.panels[0].queries['.history-scroll'].scrollLeft,665);
+  assert.equal(f.panels[0].queries['.history-scroll'].scrollLeft,145);
   assert.equal(f.root.classList.contains('history-enhanced'),true);
 });
 test('switch trend without touching gallery query parameters',()=>{
@@ -88,11 +88,13 @@ test('dot selection opens matching year and highlights only that record',()=>{
   assert.equal(new URL(f.env.location.href).searchParams.has('history-year'),false);
 });
 test('restore a valid year and ignore invalid query input',()=>{
-  const f=fixture('?trend=patents&history-year=2007&history-key=patents2007');
+  const f=fixture('?trend=patents&history-year=2022&history-key=patents2022');
   assert.equal(f.years[2].open,true);
   assert.equal(f.items[2].classList.contains('is-highlighted'),true);
   assert.equal(f.api.selectYear('papers','2026<script>'),false);
   assert.equal(f.api.selectTrend('unknown'),false);
+  const legacy=fixture('?trend=patents&history-year=2007');
+  assert.equal(legacy.years.some(y=>y.open),false);
 });
 test('modified link click is not intercepted',()=>{
   const f=fixture();

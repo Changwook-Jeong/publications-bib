@@ -1,4 +1,5 @@
 import json
+import re
 import sys
 import tempfile
 import unittest
@@ -101,11 +102,40 @@ class ActivityTests(unittest.TestCase):
             self.assertIn('id="trend-patents"',page)
             self.assertIn("not unique inventions",page)
             self.assertIn("Domestic (KR) coverage is incomplete",page)
-            self.assertIn('id="history-papers-2015"',page)
-            self.assertIn("No records for this year",page)
+            self.assertNotIn('id="history-papers-2015"',page)
+            self.assertIn('id="history-papers-2022"',page)
+            self.assertIn("Earlier research",page)
+            self.assertIn("2007–2021 · CUMULATIVE",page)
+            self.assertIn("Research at UNIST",page)
             self.assertTrue((Path(temp)/"research-activity.js").exists())
             for private in ("export (1).xlsx","의뢰번호","관리번호","현재상태명","zotero_files","C:\\Users"):
                 self.assertNotIn(private,page)
+
+    def test_period_summaries_and_annual_symbols_reconcile(self):
+        data=activity.load_activity(ROOT/"publications.bib",ROOT/"research-summaries.json",AS_OF)
+        page=activity.activity_section(data,[],{},[],4)
+        for kind in ("papers","patents"):
+            early=[r for r in data[kind] if r["year"]<=2021]
+            annual=[r for r in data[kind] if r["year"]>=2022]
+            self.assertIn(f'data-earlier-kind="{kind}"><strong>{len(early)}</strong>',page)
+            chart=re.search(rf'aria-label="Scrollable {kind} timeline">(<svg.*?</svg>)',page).group(1)
+            tree=ET.fromstring(chart)
+            dots=[e for e in tree.iter() if "data-history-key" in e.attrib]
+            self.assertEqual(len(dots),len(annual))
+            self.assertEqual(len(early)+len(dots),len(data[kind]))
+            self.assertEqual({e.attrib["data-history-year"] for e in tree.iter()
+                              if e.attrib.get("class")=="history-year-link"},
+                             {str(y) for y in range(2022,2027)})
+            self.assertNotIn('data-history-year="2021"',page)
+            self.assertNotIn('data-history-year="2007"',page)
+
+    def test_empty_annual_year_keeps_zero_and_details(self):
+        svg=activity.plot_svg([],"papers",2022,AS_OF,2022)
+        self.assertIn('data-history-year="2025"',svg)
+        details=activity.year_details([],"papers",2022,AS_OF,{},[])
+        self.assertIn('id="history-papers-2025"',details)
+        self.assertIn('data-history-count="0"',details)
+        self.assertIn("No records for this year",details)
 
 
 if __name__=="__main__":

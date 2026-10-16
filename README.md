@@ -127,8 +127,12 @@ Papers / Patents timelines. This does not change the Google Sites pages.
   national records and application/grant records may appear separately.
 - The year is the existing bibliography's year; priority and filing dates are not
   inferred. Future years/months and verified future days are excluded.
-- Recent five calendar years use stronger symbols, on the same scale as older years.
-  Empty years stay visible. A year/symbol reveals its bibliographic records.
+- The 2007–2021 period is a separate cumulative summary of earlier academic and
+  industrial research, never a column on an annual chart. Annual timelines start
+  in 2022, with period-specific totals on the Papers / Patents toggle. These are
+  record years, not assertions about where or when the underlying work was done.
+- Recent five calendar years use stronger symbols. Empty annual years stay
+  visible. A year/symbol reveals its bibliographic records.
 - Patent symbols are open circles for KR and solid circles for other identified
   jurisdictions. Unspecified jurisdictions use squares, never guessed from an
   inventor or assignee's location. Domestic coverage remains incomplete until the
