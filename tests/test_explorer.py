@@ -1,4 +1,5 @@
 import json
+import re
 import sys
 import tempfile
 import unittest
@@ -77,6 +78,26 @@ class ExplorerTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 explorer.safe_url(url)
         self.assertEqual(explorer.safe_url("https://openreview.net/forum?id=abc"),"https://openreview.net/forum?id=abc")
+
+    def test_topic_border_palette_and_primary_area_mapping(self):
+        css=(ROOT/"web"/"research.css").read_text(encoding="utf-8")
+        borders=[]
+        for area in explorer.TOPICS:
+            rule=re.search(r'\.research-card\.area-'+area+r'\{([^}]+)\}',css)
+            self.assertIsNotNone(rule,area)
+            border=re.search(r'--card-border:(#[0-9a-f]{6})',rule.group(1))
+            self.assertIsNotNone(border,area)
+            borders.append(border.group(1))
+        self.assertEqual(len(set(borders)),len(explorer.TOPICS))
+        self.assertIn('border:1px solid var(--card-border)',css)
+        self.assertIn('border-top:3px solid var(--card-accent)',css)
+        self.assertIn('border-left:3px solid var(--card-accent)',css)
+        paper=dict(explorer.load_catalog(ROOT/"research-summaries.json",ROOT/"publications.bib",AS_OF)[0])
+        paper["areas"]=["ai","devices"]
+        card=explorer.card(paper,1)
+        self.assertIn('class="research-card area-ai"',card)
+        self.assertIn('data-topic="ai devices"',card)
+        self.assertIn('AI &amp; design',card)
 
 
 if __name__ == "__main__":

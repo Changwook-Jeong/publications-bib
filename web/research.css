@@ -27,8 +27,10 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
 .view-options button[aria-pressed=true]{background:#e6eeee;color:#204c56;font-weight:750}
 .collection-meta{display:flex;justify-content:space-between;gap:14px;margin:18px 0 14px;color:var(--muted);font-size:11px;line-height:1.5}
 .research-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
-.research-card{--card-accent:#386c84;--card-tint:#f0f5f8;min-height:320px;padding:23px 24px 19px;background:#fff;border:1px solid #d8e2e0;border-top:3px solid var(--card-accent);border-radius:7px;box-shadow:0 2px 4px #18303904;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;cursor:pointer}
-.research-card.area-materials{--card-accent:#3c7564;--card-tint:#edf5ef}.research-card.area-memory{--card-accent:#886633;--card-tint:#faf4e8}.research-card.area-ai{--card-accent:#67638b;--card-tint:#f3f1f8}
+.research-card{--card-accent:#386c84;--card-tint:#f0f5f8;--card-border:#aac2ce;min-height:320px;padding:23px 24px 19px;background:#fff;border:1px solid var(--card-border);border-top:3px solid var(--card-accent);border-radius:7px;box-shadow:0 2px 4px #18303904;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;cursor:pointer}
+.research-card.area-devices{--card-accent:#386c84;--card-tint:#f0f5f8;--card-border:#aac2ce}
+.research-card.area-materials{--card-accent:#3c7564;--card-tint:#edf5ef;--card-border:#b1c9be}.research-card.area-memory{--card-accent:#886633;--card-tint:#faf4e8;--card-border:#d6c5a6}.research-card.area-ai{--card-accent:#67638b;--card-tint:#f3f1f8;--card-border:#c3bfd8}
+.research-card.area-other{--card-accent:#677478;--card-tint:#f2f4f4;--card-border:#c4cdcf}
 .research-card:hover,.research-card:focus-within{transform:translateY(-4px);border-color:var(--card-accent);box-shadow:0 10px 24px #18303912}
 .topic{display:flex;align-items:center;gap:7px;color:var(--card-accent);font-size:9px;letter-spacing:.07em;text-transform:uppercase}.topic i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--card-accent)}
 .card-index{font-family:ui-monospace,monospace;font-size:11px;color:#6e8389;padding-top:1px}
