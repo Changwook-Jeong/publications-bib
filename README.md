@@ -82,7 +82,7 @@ AI-assisted, not-author-reviewed status. No PDFs, source-page images, local path
 extracted text files, or private research material belong in this repository.
 
 The research explorer shows journal and conference papers in a rolling 12-month
-window at build time. Patents and invited talks remain in Publications, not this
+window at build time, using Korea time. Patents and invited talks remain in Publications, not this
 gallery. Each normal bibliography update rebuilds both pages. There is no additional
 scheduled task: a quiet library's time window advances on its next build.
 

@@ -8,7 +8,7 @@ import hashlib
 import json
 import re
 import shutil
-from datetime import date
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import urlsplit
 
@@ -172,7 +172,8 @@ def overview(papers: list[dict], as_of: date, roles: dict, members: list[str]) -
 
 
 def build(output: Path, data: Path = ROOT / "research-summaries.json", bib: Path = ROOT / "publications.bib", as_of: date | None = None) -> list[dict]:
-    as_of = as_of or date.today()
+    # GitHub runners use UTC; the group's publication window follows Korea time.
+    as_of = as_of or datetime.now(timezone(timedelta(hours=9))).date()
     papers = load_catalog(data, bib, as_of)
     curated = summaries.load_summaries(data, bib)
     roles, members = load_roles(ROOT / "author-roles.json"), load_members(ROOT / "group-members.json")
