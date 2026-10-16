@@ -40,6 +40,9 @@ jobs:
       - name: Run tests
         run: python -m unittest discover -s tests
 
+      - name: Test timeline interactions without a browser
+        run: node --test tests/activity.test.cjs
+
       - name: Build responsive publication page
         run: python scripts/build_publications.py --output _site
 

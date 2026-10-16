@@ -13,6 +13,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 import build_research as summaries
+from build_activity import activity_section, load_activity
 from build_publications import (
     citation_text, clean_tex, entry_category, entry_month, entry_year,
     load_members, load_roles, parse_bibtex, render_authors,
@@ -133,7 +134,7 @@ def detail_page(paper: dict, papers: list[dict], roles: dict, members: list[str]
       asset_prefix="../", detail=True)
 
 
-def overview(papers: list[dict], as_of: date, roles: dict, members: list[str]) -> str:
+def overview(papers: list[dict], as_of: date, roles: dict, members: list[str], activity: dict | None = None) -> str:
     cards = "\n".join(card(p, i) for i, p in enumerate(papers, 1))
     topics = [(k,v) for k,v in TOPICS.items() if any(k in p["areas"] for p in papers)]
     filters = f'<button type="button" class="filter-button active" data-filter="all" aria-pressed="true">All research <span>{len(papers)}</span></button>'
@@ -149,6 +150,7 @@ def overview(papers: list[dict], as_of: date, roles: dict, members: list[str]) -
     content = f'''<main id="main">
       <section class="hero"><div><p class="eyebrow">A WINDOW INTO OUR RESEARCH</p><h1>Ideas in motion.<br><em>Physics at the core.</em></h1></div>
         <div class="hero-description"><p>Explore the questions, discoveries and design possibilities behind our latest papers.</p><p class="hero-note">From atomic-scale materials to devices, memory and intelligent design.</p></div></section>
+      {activity_section(activity, papers, roles, members, len(TOPICS)-1) if activity else ''}
       <section class="research-section" aria-labelledby="research-heading">
         <div class="section-heading"><div><p class="eyebrow">RECENT 12 MONTHS</p><h2 id="research-heading">Research explorer <span class="collection-count">{len(papers)}</span></h2></div>
           <a class="text-link" href="{GROUP}publications" target="_top">All publications ↗</a></div>
@@ -168,7 +170,9 @@ def overview(papers: list[dict], as_of: date, roles: dict, members: list[str]) -
         <div class="reader-scroll"><div id="reader-content"></div></div></dialog>
       {''.join(templates)}
     </main>'''
-    return summaries.shell("Research explorer", content)
+    return summaries.shell("Research explorer", content).replace(
+        '<script src="research.js"></script>',
+        '<script src="research-activity.js"></script>\n  <script src="research.js"></script>')
 
 
 def build(output: Path, data: Path = ROOT / "research-summaries.json", bib: Path = ROOT / "publications.bib", as_of: date | None = None) -> list[dict]:
@@ -177,14 +181,15 @@ def build(output: Path, data: Path = ROOT / "research-summaries.json", bib: Path
     papers = load_catalog(data, bib, as_of)
     curated = summaries.load_summaries(data, bib)
     roles, members = load_roles(ROOT / "author-roles.json"), load_members(ROOT / "group-members.json")
+    activity = load_activity(bib, data, as_of)
     output.mkdir(parents=True, exist_ok=True)
-    (output / "index.html").write_text(overview(papers, as_of, roles, members), encoding="utf-8")
+    (output / "index.html").write_text(overview(papers, as_of, roles, members, activity), encoding="utf-8")
     # Keep old deep links alive when their papers leave the recent-paper window.
     for paper in {p["slug"]:p for p in [*curated,*papers]}.values():
         folder = output / paper["slug"]
         folder.mkdir(exist_ok=True)
         (folder / "index.html").write_text(detail_page(paper, papers, roles, members), encoding="utf-8")
-    for name in ("research.css", "research.js"):
+    for name in ("research.css", "research.js", "research-activity.js"):
         shutil.copyfile(ROOT / "web" / name, output / name)
     return papers
 

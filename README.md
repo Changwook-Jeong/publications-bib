@@ -113,4 +113,29 @@ For a reproducible date-window check:
 ```powershell
 python scripts/build_explorer.py --as-of 2026-10-17 --output _site/research-preview
 python -m unittest discover -s tests
+node --test tests/activity.test.cjs
 ```
+
+## Research activity since 2007
+
+The research preview adds a bibliography-derived statistics strip and separate
+Papers / Patents timelines. This does not change the Google Sites pages.
+
+- Papers include journal and conference records from 2007 through the build date;
+  invited talks, books and patents are excluded from paper counts.
+- Patent counts are library records, not unique inventions or families. Related
+  national records and application/grant records may appear separately.
+- The year is the existing bibliography's year; priority and filing dates are not
+  inferred. Future years/months and verified future days are excluded.
+- Recent five calendar years use stronger symbols, on the same scale as older years.
+  Empty years stay visible. A year/symbol reveals its bibliographic records.
+- Patent symbols are open circles for KR and solid circles for other identified
+  jurisdictions. Unspecified jurisdictions use squares, never guessed from an
+  inventor or assignee's location. Domestic coverage remains incomplete until the
+  user imports the confirmed records into Zotero.
+- No university export, unpublished application, internal ID or management status
+  is copied into this repository. The supplied domestic export has not been imported.
+
+The current user requested no computer-use actions. Validation for this update
+uses Python data/SVG/HTML tests and Node interaction-controller tests without
+controlling a browser or Zotero. Browser layout QA is deferred.
