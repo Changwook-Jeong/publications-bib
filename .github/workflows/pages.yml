@@ -9,7 +9,9 @@ on:
       - publications.bib
       - author-roles.json
       - group-members.json
+      - research-summaries.json
       - scripts/**
+      - tests/**
       - web/**
       - .github/workflows/pages.yml
   workflow_dispatch:
@@ -40,6 +42,9 @@ jobs:
 
       - name: Build responsive publication page
         run: python scripts/build_publications.py --output _site
+
+      - name: Build separate research-summary preview
+        run: python scripts/build_research.py --output _site/research-preview
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

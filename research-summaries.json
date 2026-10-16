@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "updated": "2026-10-17",
+  "papers": [
+    {
+      "citation_key": "huhScalingTheoryNonlinear2026",
+      "slug": "cryogenic-transistors",
+      "topic": "Device physics",
+      "headline": "Why colder transistors do not always switch more sharply",
+      "summary": "Cooling should make a transistor's turn-on sharper, yet real devices show peaks, valleys and saturation. A transport-based scaling theory separates the effects of band-tail states from the measurement conditions that shape these anomalies.",
+      "takeaway": "A low-temperature switching plateau is not always an intrinsic device limit.",
+      "question": "Why does subthreshold swing, a measure of how sharply a transistor turns on, stop following the ideal temperature dependence in ultrathin-body MOSFETs? Similar anomalies appear in silicon, two-dimensional and oxide-semiconductor devices, but not every plateau has the same physical origin.",
+      "approach": "The study uses a diffusive Landauer transport formulation coupled to the transistor's electrostatics. Numerical calculations and asymptotic analysis distinguish localized band-tail states, which store charge, from conductive tail states, which also carry current. The analysis yields compact scaling expressions and compares them with published silicon measurements.",
+      "findings": [
+        "For localized tail states, the competition between tail-state charge and gate control can generate a peak-and-valley temperature dependence. Its onset is approximately governed by the ratio of tail-state capacitance to oxide capacitance.",
+        "In the localized-tail model, a deep-cryogenic plateau depends on the reference current and scattering model. Lowering the reference current lowers this measurement-related floor; it should not automatically be interpreted as an intrinsic switching limit.",
+        "Temperature scales in the theory separate the band-tail energy width from the onset of carrier degeneracy, providing a route to extract defect-related parameters from electrical measurements."
+      ],
+      "significance": "The work connects an unusual electrical signature to the microscopic states and measurement choices behind it. This can help researchers interpret cryogenic transistor data and distinguish material-quality changes from the conditions used to measure switching.",
+      "scope": "This is a transport-theory study, not a demonstration of a newly fabricated transistor or quantum-computing circuit. Conclusions about the current-dependent floor apply to the localized-tail model; conductive tail states have different saturation behavior.",
+      "skills": ["Carrier transport", "Device electrostatics", "Defect characterization"],
+      "source_note": "Full text: author's accepted manuscript stored in Zotero. Journal citation is taken from the bibliography.",
+      "source_locator": "Sections II-III; Figs. 1-5; Conclusion",
+      "full_text_checked": true
+    },
+    {
+      "citation_key": "parkNeuralDomainDecomposition2026",
+      "slug": "chip-scale-multiphysics",
+      "topic": "Physics-grounded AI",
+      "headline": "Bringing thermal and stress analysis to chip scale",
+      "summary": "A chip is too large for many neural simulation models to handle at once. FP-DDM solves overlapping regions with a reusable model, then uses physics and interface matching to assemble a consistent large-domain solution.",
+      "takeaway": "Local neural solvers become more useful when their boundaries obey global physics.",
+      "question": "How can neural simulation support chip-scale thermal and mechanical analysis without requiring the entire problem to fit on a GPU? Dividing the chip into small regions helps with memory, but the local solutions must still agree across their boundaries.",
+      "approach": "FP-DDM combines a shared Fourier neural operator with overlapping domain decomposition. Test-time physics adaptation refines predictions using governing equations, while Neural Schwarz Acceleration directly optimizes interface boundary values. CPU-GPU offloading streams subdomains instead of keeping the complete domain in GPU memory.",
+      "findings": [
+        "In the reported comparisons, gradient-guided interface updates converge faster than classical boundary exchange; a coarse homogenized starting field further improves convergence.",
+        "Physics-based test-time adaptation transfers pretrained models to stress problems and previously unseen layout-derived material fields without ground-truth labels during adaptation.",
+        "The implementation supports problems of up to 10 billion cells through CPU-GPU offloading. A separate layout-density example demonstrates gradient-based temperature optimization."
+      ],
+      "significance": "The framework links simulation with design: material distributions, physical response and design objectives can be connected in one differentiable workflow. It offers a route toward thermal-stress-aware semiconductor system and layout co-optimization.",
+      "scope": "The demonstrations concern steady-state thermal conduction and thermoelastic problems. The 10-billion-cell result establishes executable scale, not benchmarked accuracy for every cell at that scale. The layout optimization uses a simplified metal-density-to-conductivity mapping, not a complete production design-rule flow.",
+      "skills": ["Thermal-stress analysis", "Scientific machine learning", "Design optimization"],
+      "doi": "10.1145/3770743.3803918",
+      "source_note": "Full text: seven-page DAC 2026 paper stored in Zotero. The DOI is printed in the paper.",
+      "source_locator": "Sections 3-4; Figs. 3, 5-7; Conclusion",
+      "full_text_checked": true
+    },
+    {
+      "citation_key": "jangUnifiedMechanismStrain2026",
+      "slug": "oxide-defect-engineering",
+      "topic": "Materials & reliability",
+      "headline": "Two routes to controlling oxygen vacancies",
+      "summary": "Mechanical strain and thermal annealing can push oxide-semiconductor defects in different directions. Atomistic calculations show why local bonding and structural relaxation, rather than density alone, determine whether vacancy-related electrons remain trapped or become mobile.",
+      "takeaway": "Local atomic arrangements matter more than a simple densification picture.",
+      "question": "Why can compressive strain and thermal annealing produce opposite electrical trends in amorphous oxide semiconductors, even when both are associated with a denser material? The answer matters because oxygen vacancies can behave as electron-trapping states or electron donors.",
+      "approach": "The study combines density functional theory, configuration-coordinate analysis and ab initio molecular dynamics for oxygen vacancies in amorphous IGZO. Fixed-volume annealing simulations separate structural relaxation from a change in overall density, allowing the authors to examine the role of specific interatomic distances.",
+      "findings": [
+        "Shorter key metal-metal distances favor localized, bonding-like vacancy states; increasing those distances can shift defect levels toward the conduction band and promote donor-like behavior.",
+        "Annealing can relax the atomic network and increase critical local distances even without changing the cell volume. This distinguishes its effect from simple mechanical compression.",
+        "The results connect defect-state changes to threshold-voltage shifts, while also showing that localized and delocalized states can coexist after annealing."
+      ],
+      "significance": "The mechanism provides a physical basis for choosing strain and thermal-processing strategies in oxide electronics. It connects atomic-scale defect engineering to the device-level goals of controlling threshold voltage, switching behavior and reliability.",
+      "scope": "The calculations establish mechanism-level trends using a limited set of oxygen-vacancy configurations in IGZO. They are not a statistically complete model of all defects formed during fabrication, nor a guarantee that annealing delocalizes every vacancy.",
+      "skills": ["Atomistic materials physics", "Process-defect relationships", "Device reliability"],
+      "source_note": "Full text: published Chemistry of Materials article stored in Zotero.",
+      "source_locator": "Sections 2.2-2.3; Table 1; Sections 3-4",
+      "full_text_checked": true
+    }
+  ]
+}
