@@ -118,8 +118,8 @@ node --test tests/activity.test.cjs
 
 ## Research activity since 2007
 
-The research preview adds a bibliography-derived statistics strip and separate
-Papers / Patents timelines. This does not change the Google Sites pages.
+The research preview adds a bibliography-derived statistics strip and a paired
+Papers / Patents timeline. This does not change the Google Sites pages.
 
 - Papers include journal and conference records from 2007 through the build date;
   invited talks, books and patents are excluded from paper counts.
@@ -129,10 +129,13 @@ Papers / Patents timelines. This does not change the Google Sites pages.
   inferred. Future years/months and verified future days are excluded.
 - The 2007–2021 period is a separate cumulative summary of earlier academic and
   industrial research, never a column on an annual chart. Annual timelines start
-  in 2022, with period-specific totals on the Papers / Patents toggle. These are
+  in 2022, with period-specific paper and patent totals above the chart. These are
   record years, not assertions about where or when the underlying work was done.
-- Recent five calendar years use stronger symbols. Empty annual years stay
-  visible. A year/symbol reveals its bibliographic records.
+- Each year has two separate stacks: papers on the left, patent records on the
+  right, on the same count scale. They are never added into a combined total.
+  Journal circles and conference diamonds are teal; patent symbols are ochre.
+  There is no recent-five-year background or opacity emphasis. Empty annual
+  years stay visible. A stack label/symbol reveals its bibliographic records.
 - Patent symbols are open circles for KR and solid circles for other identified
   jurisdictions. Unspecified jurisdictions use squares, never guessed from an
   inventor or assignee's location. Domestic coverage remains incomplete until the

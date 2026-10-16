@@ -64,23 +64,23 @@ class ActivityTests(unittest.TestCase):
 
     def test_svg_each_symbol_matches_one_record_and_every_year_exists(self):
         data=activity.load_activity(ROOT/"publications.bib",ROOT/"research-summaries.json",AS_OF)
+        svg=activity.plot_svg(data,2007,AS_OF)
+        tree=ET.fromstring(svg)
         for kind in ("papers","patents"):
-            svg=activity.plot_svg(data[kind],kind,2007,AS_OF,2022)
-            tree=ET.fromstring(svg)
-            symbols=[e for e in tree.iter() if "data-history-key" in e.attrib]
+            symbols=[e for e in tree.iter() if "data-history-key" in e.attrib and e.attrib["data-history-kind"]==kind]
             self.assertEqual(len(symbols),len(data[kind]))
             self.assertEqual(len({e.attrib["data-history-key"] for e in symbols}),len(symbols))
-            labels=[e for e in tree.iter() if e.attrib.get("class")=="history-year-link"]
+            labels=[e for e in tree.iter() if e.attrib.get("class")=="history-year-link" and e.attrib["data-history-kind"]==kind]
             self.assertEqual(len(labels),20)
             self.assertIn("2026*",svg)
-            self.assertIn('fill="#edf4f0"',svg)
-            self.assertIn('fill-opacity="0.43"',svg)
+            self.assertNotIn('fill="#edf4f0"',svg)
+            self.assertNotIn('fill-opacity=',svg)
 
     def test_patent_open_and_solid_symbols_and_unknown(self):
         rows=[dict(id="a",year=2026,title="Domestic",jurisdiction="KR"),
               dict(id="b",year=2026,title="Foreign",jurisdiction="non-KR"),
               dict(id="c",year=2026,title="Unknown",jurisdiction="unknown")]
-        tree=ET.fromstring(activity.plot_svg(rows,"patents",2007,AS_OF,2022))
+        tree=ET.fromstring(activity.plot_svg({"papers":[],"patents":rows},2022,AS_OF))
         symbols={e.attrib["data-history-key"]:e for e in tree.iter() if "data-history-key" in e.attrib}
         self.assertEqual(list(symbols["a"])[-1].attrib["fill"],"#fff")
         self.assertEqual(list(symbols["b"])[-1].attrib["fill"],"#8b6938")
@@ -90,7 +90,7 @@ class ActivityTests(unittest.TestCase):
         for url in ("file:///C:/private","javascript:alert(1)","https://127.0.0.1/private"):
             entry=parse_bibtex("@patent{k,title={T},url={"+url+"}}")[0]
             self.assertEqual(activity.public_link(entry,{}),"")
-        svg=activity.plot_svg([dict(id="safe",year=2026,category="journals",title='<script>alert("x")</script>')],"papers",2007,AS_OF,2022)
+        svg=activity.plot_svg({"papers":[dict(id="safe",year=2026,category="journals",title='<script>alert("x")</script>')],"patents":[]},2022,AS_OF)
         self.assertNotIn("<script>",svg)
         self.assertIn("&lt;script&gt;",svg)
 
@@ -98,8 +98,9 @@ class ActivityTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             explorer.build(Path(temp),as_of=AS_OF)
             page=(Path(temp)/"index.html").read_text(encoding="utf-8")
-            self.assertIn('id="trend-papers"',page)
-            self.assertIn('id="trend-patents"',page)
+            self.assertIn('id="trend-combined"',page)
+            self.assertNotIn('class="trend-switch"',page)
+            self.assertNotIn("Recent 5 years",page)
             self.assertIn("not unique inventions",page)
             self.assertIn("Domestic (KR) coverage is incomplete",page)
             self.assertNotIn('id="history-papers-2015"',page)
@@ -114,13 +115,14 @@ class ActivityTests(unittest.TestCase):
     def test_period_summaries_and_annual_symbols_reconcile(self):
         data=activity.load_activity(ROOT/"publications.bib",ROOT/"research-summaries.json",AS_OF)
         page=activity.activity_section(data,[],{},[],4)
+        chart=re.search(r'aria-label="Scrollable papers and patents timeline">(<svg.*?</svg>)',page).group(1)
+        tree=ET.fromstring(chart)
+        self.assertEqual(page.count('class="activity-plot"'),1)
         for kind in ("papers","patents"):
             early=[r for r in data[kind] if r["year"]<=2021]
             annual=[r for r in data[kind] if r["year"]>=2022]
             self.assertIn(f'data-earlier-kind="{kind}"><strong>{len(early)}</strong>',page)
-            chart=re.search(rf'aria-label="Scrollable {kind} timeline">(<svg.*?</svg>)',page).group(1)
-            tree=ET.fromstring(chart)
-            dots=[e for e in tree.iter() if "data-history-key" in e.attrib]
+            dots=[e for e in tree.iter() if "data-history-key" in e.attrib and e.attrib["data-history-kind"]==kind]
             self.assertEqual(len(dots),len(annual))
             self.assertEqual(len(early)+len(dots),len(data[kind]))
             self.assertEqual({e.attrib["data-history-year"] for e in tree.iter()
@@ -130,12 +132,24 @@ class ActivityTests(unittest.TestCase):
             self.assertNotIn('data-history-year="2007"',page)
 
     def test_empty_annual_year_keeps_zero_and_details(self):
-        svg=activity.plot_svg([],"papers",2022,AS_OF,2022)
+        svg=activity.plot_svg({"papers":[],"patents":[]},2022,AS_OF)
         self.assertIn('data-history-year="2025"',svg)
         details=activity.year_details([],"papers",2022,AS_OF,{},[])
         self.assertIn('id="history-papers-2025"',details)
         self.assertIn('data-history-count="0"',details)
         self.assertIn("No records for this year",details)
+
+    def test_pair_positions_counts_and_shared_scale(self):
+        groups={"papers":[dict(id="j",year=2026,category="journals",title="J"),dict(id="c",year=2026,category="conferences",title="C")],
+                "patents":[dict(id="p",year=2026,jurisdiction="non-KR",title="P")]}
+        tree=ET.fromstring(activity.plot_svg(groups,2022,AS_OF))
+        symbols={e.attrib["data-history-key"]:list(e)[-1] for e in tree.iter() if "data-history-key" in e.attrib}
+        self.assertLess(float(symbols["j"].attrib["cx"]),float(symbols["p"].attrib["cx"]))
+        self.assertEqual(symbols["j"].attrib["cy"],symbols["p"].attrib["cy"])
+        self.assertEqual(symbols["j"].attrib["fill"],symbols["c"].attrib["fill"])
+        self.assertNotEqual(symbols["j"].attrib["fill"],symbols["p"].attrib["fill"])
+        counts={e.attrib["data-stack-kind"]:int(e.attrib["data-stack-count"]) for e in tree.iter() if e.attrib.get("data-stack-year")=="2026"}
+        self.assertEqual(counts,{"papers":2,"patents":1})
 
 
 if __name__=="__main__":

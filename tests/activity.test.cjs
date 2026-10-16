@@ -45,7 +45,9 @@ function fixture(search='') {
   root.queries={
     '[data-trend-panel]':panels,'[data-trend]':buttons,
     '[data-history-panel]':years,'[data-history-year]':links,
-    '[data-history-item]':items,'.trend-switch':new Element()
+    '[data-history-item]':items,
+    '.history-scroll':Object.assign(new Element(),{scrollWidth:1000,clientWidth:375,scrollLeft:0}),
+    '.history-selection-tools':new Element(),'.history-selection-status':new Element(),'.history-close':new Element()
   };
   const env={
     location:{search,href:'https://example.org/research-preview/'+search},
@@ -55,17 +57,17 @@ function fixture(search='') {
   return {root,panels,buttons,years,links,items,env,api:init(root,env)};
 }
 
-test('default paper view and mobile scroll start at recent years',()=>{
+test('combined chart keeps both record groups visible and scrolls to recent years',()=>{
   const f=fixture();
   assert.equal(f.panels[0].hidden,false);
-  assert.equal(f.panels[1].hidden,true);
-  assert.equal(f.buttons[0].attrs['aria-pressed'],'true');
-  assert.equal(f.panels[0].queries['.history-scroll'].scrollLeft,145);
+  assert.equal(f.panels[1].hidden,false);
+  assert.equal(f.root.queries['.history-scroll'].scrollLeft,625);
+  assert.equal(f.root.queries['.history-selection-tools'].hidden,true);
   assert.equal(f.root.classList.contains('history-enhanced'),true);
 });
-test('switch trend without touching gallery query parameters',()=>{
+test('select patent stack without touching gallery query parameters',()=>{
   const f=fixture('?q=oxide&topic=materials&embed=1');
-  f.buttons[1].emit('click');
+  f.api.selectYear('patents','2026');
   assert.equal(f.panels[1].hidden,false);
   const url=new URL(f.env.location.href);
   assert.equal(url.searchParams.get('trend'),'patents');
@@ -82,7 +84,7 @@ test('dot selection opens matching year and highlights only that record',()=>{
   assert.equal(f.items[3].classList.contains('is-highlighted'),true);
   assert.equal(f.items[3].focused,true);
   assert.equal(f.items[3].scrolled,true);
-  assert.equal(f.panels[1].queries['.history-selection-status'].textContent,'2026 · 1 patent records');
+  assert.equal(f.root.queries['.history-selection-status'].textContent,'2026 · 1 patent records');
   f.api.closeSelection();
   assert.equal(f.years[3].open,false);
   assert.equal(new URL(f.env.location.href).searchParams.has('history-year'),false);
@@ -92,7 +94,7 @@ test('restore a valid year and ignore invalid query input',()=>{
   assert.equal(f.years[2].open,true);
   assert.equal(f.items[2].classList.contains('is-highlighted'),true);
   assert.equal(f.api.selectYear('papers','2026<script>'),false);
-  assert.equal(f.api.selectTrend('unknown'),false);
+  assert.equal(f.api.selectYear('unknown','2026'),false);
   const legacy=fixture('?trend=patents&history-year=2007');
   assert.equal(legacy.years.some(y=>y.open),false);
 });
@@ -106,5 +108,16 @@ test('native closing of details synchronizes expanded state',()=>{
   f.api.selectYear('papers','2026');
   f.years[1].open=false;f.years[1].emit('toggle');
   assert.equal(f.links[1].attrs['aria-expanded'],'false');
-  assert.equal(f.panels[0].queries['.history-selection-tools'].hidden,true);
+  assert.equal(f.root.queries['.history-selection-tools'].hidden,true);
+});
+test('switching stacks closes old selection but never hides either data series',()=>{
+  const f=fixture();
+  f.api.selectYear('papers','2026','papers2026');
+  f.api.selectYear('patents','2022','patents2022');
+  assert.equal(f.years.filter(y=>y.open).length,1);
+  assert.equal(f.years[2].open,true);
+  assert.equal(f.items[1].classList.contains('is-highlighted'),false);
+  assert.equal(f.links[1].attrs['aria-expanded'],'false');
+  assert.equal(f.links[2].attrs['aria-expanded'],'true');
+  assert.ok(f.panels.every(p=>!p.hidden));
 });

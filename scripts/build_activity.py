@@ -1,4 +1,4 @@
-"""Bibliography-derived statistics and separate paper/patent histories."""
+"""Bibliography-derived statistics and a paired paper/patent history."""
 from __future__ import annotations
 
 import hashlib
@@ -83,49 +83,48 @@ def load_activity(bib: Path, data: Path, as_of: date, start: int = START_YEAR) -
     return groups
 
 
-def plot_svg(rows: list[dict], kind: str, start: int, as_of: date, recent_start: int) -> str:
-    """One symbol per library record; do not invent patent-family counts."""
-    years = range(start, as_of.year + 1)
-    by_year = {y: [r for r in rows if r["year"] == y] for y in years}
-    maximum = max((len(rs) for rs in by_year.values()), default=0)
+def plot_svg(groups: dict, start: int, as_of: date) -> str:
+    """Two independent stacks per year, one symbol per record, shared count scale."""
+    by_year = {year: {kind: [r for r in groups[kind] if r["year"] == year]
+                      for kind in ("papers", "patents")}
+               for year in range(start, as_of.year + 1)}
+    maximum = max((len(rows) for kinds in by_year.values() for rows in kinds.values()), default=0)
     step = 14
-    width, height = max(520, 48 + len(by_year) * 82), max(270, maximum * step + 90)
+    width, height = max(1000, 48 + len(by_year) * 190), max(280, maximum * step + 100)
     column_width = (width - 48) / max(1, len(by_year))
-    baseline = height - 55
-    parts = [f'<svg xmlns="http://www.w3.org/2000/svg" class="activity-plot" viewBox="0 0 {width} {height}" font-family="Arial, sans-serif" role="group" aria-label="{esc(kind.title())} by year from {start} to {as_of.year}">',
-             '<desc>Choose a year to inspect its library records. Earlier and recent years use the same count scale.</desc>']
-    for column, (year, records) in enumerate(by_year.items()):
-        x = 24 + (column + .5) * column_width
-        recent = year >= recent_start
-        opacity = 1 if recent else .43
-        if recent:
-            parts.append(f'<rect x="{x-column_width/2+2}" y="8" width="{column_width-4}" height="{height-12}" rx="5" fill="#edf4f0"/>')
-        count_y = baseline - len(records) * step - 10
-        parts.append(f'<text x="{x}" y="{count_y}" text-anchor="middle" font-size="11" fill="#52676d">{len(records)}</text>')
-        if kind == "papers":
-            for index, row in enumerate(records):
-                y = baseline - (index + .5) * step
-                label = f'{year} · {LABELS[row["category"]]} · {row["title"]}'
-                parts.append(f'<a href="#history-{kind}-{year}" class="history-dot" data-history-kind="{kind}" data-history-year="{year}" data-history-key="{row["id"]}" aria-label="{esc(label)}"><title>{esc(label)}</title>')
-                parts.append(f'<rect x="{x-11}" y="{y-7}" width="22" height="14" fill="transparent"/>')
-                if row["category"] == "journals":
-                    parts.append(f'<circle cx="{x}" cy="{y}" r="3.8" fill="#326c79" fill-opacity="{opacity}"/>')
-                else:
-                    parts.append(f'<rect x="{x-3.2}" y="{y-3.2}" width="6.4" height="6.4" transform="rotate(45 {x} {y})" fill="#8b6938" fill-opacity="{opacity}"/>')
-                parts.append("</a>")
-        else:
+    baseline = height - 75
+    parts = [f'<svg xmlns="http://www.w3.org/2000/svg" class="activity-plot" viewBox="0 0 {width} {height}" font-family="Arial, sans-serif" role="group" aria-label="Papers and patent records by year from {start} to {as_of.year}">',
+             '<desc>Each year has papers on the left and patent records on the right, on the same count scale. Counts are separate, not added. Choose a symbol or stack label to inspect its records.</desc>']
+    for column, (year, kinds) in enumerate(by_year.items()):
+        center = 24 + (column + .5) * column_width
+        if column:
+            boundary = 24 + column * column_width
+            parts.append(f'<line x1="{boundary}" y1="8" x2="{boundary}" y2="{height-8}" stroke="#e6edeb" pointer-events="none"/>')
+        for kind, offset in (("papers", -.19), ("patents", .19)):
+            records = kinds[kind]
+            x = center + offset * column_width
+            color = "#326c79" if kind == "papers" else "#8b6938"
+            count_y = baseline - len(records) * step - 12
+            parts.append(f'<text x="{x}" y="{count_y}" text-anchor="middle" font-size="13" font-weight="600" fill="{color}" data-stack-kind="{kind}" data-stack-year="{year}" data-stack-count="{len(records)}">{len(records)}</text>')
             for index, row in enumerate(records):
                 y = baseline - (index + .5) * step
                 jurisdiction = row.get("jurisdiction", "unknown")
-                label = f'{year} · {JURISDICTIONS[jurisdiction]} · {row["title"]}'
-                parts.append(f'<a href="#history-{kind}-{year}" class="history-dot" data-history-kind="{kind}" data-history-year="{year}" data-history-key="{row["id"]}" data-jurisdiction="{jurisdiction}" aria-label="{esc(label)}"><title>{esc(label)}</title><rect x="{x-11}" y="{y-7}" width="22" height="14" fill="transparent"/>')
-                if jurisdiction == "unknown":
-                    parts.append(f'<rect x="{x-3.5}" y="{y-3.5}" width="7" height="7" fill="#899a9f" fill-opacity="{opacity}"/>')
+                label_kind = LABELS[row["category"]] if kind == "papers" else "Patent record · " + JURISDICTIONS[jurisdiction]
+                label = f'{year} · {label_kind} · {row["title"]}'
+                jurisdiction_attr = f' data-jurisdiction="{jurisdiction}"' if kind == "patents" else ""
+                parts.append(f'<a href="#history-{kind}-{year}" class="history-dot" data-history-kind="{kind}" data-history-year="{year}" data-history-key="{row["id"]}"{jurisdiction_attr} aria-label="{esc(label)}"><title>{esc(label)}</title><rect x="{x-12}" y="{y-7}" width="24" height="14" fill="transparent"/>')
+                if kind == "papers" and row["category"] == "conferences":
+                    parts.append(f'<rect x="{x-3.6}" y="{y-3.6}" width="7.2" height="7.2" transform="rotate(45 {x} {y})" fill="{color}"/>')
+                elif kind == "patents" and jurisdiction == "unknown":
+                    parts.append(f'<rect x="{x-4}" y="{y-4}" width="8" height="8" fill="#899a9f"/>')
                 else:
-                    parts.append(f'<circle cx="{x}" cy="{y}" r="3.8" fill="{'#fff' if jurisdiction == 'KR' else '#8b6938'}" fill-opacity="{opacity}" stroke="#8b6938" stroke-opacity="{opacity}" stroke-width="1.5"/>')
+                    fill = "#fff" if kind == "patents" and jurisdiction == "KR" else color
+                    parts.append(f'<circle cx="{x}" cy="{y}" r="4.2" fill="{fill}" stroke="{color}" stroke-width="1.4"/>')
                 parts.append("</a>")
+            stack_label = "Papers" if kind == "papers" else "Patents"
+            parts.append(f'<a href="#history-{kind}-{year}" class="history-year-link" data-history-kind="{kind}" data-history-year="{year}" aria-label="{year}: {len(records)} {kind}"><rect x="{x-32}" y="{baseline+4}" width="64" height="28" fill="transparent"/><text x="{x}" y="{baseline+23}" text-anchor="middle" font-size="12" fill="{color}">{stack_label}</text></a>')
         year_label = str(year) + ("*" if year == as_of.year else "")
-        parts.append(f'<a href="#history-{kind}-{year}" class="history-year-link" data-history-kind="{kind}" data-history-year="{year}" aria-label="{year}: {len(records)} {kind}"><rect x="{x-23}" y="{baseline+3}" width="46" height="45" fill="transparent"/><text x="{x}" y="{baseline+25}" text-anchor="middle" font-size="12" font-weight="{700 if recent else 400}" fill="#294a54">{year_label}</text></a>')
+        parts.append(f'<text x="{center}" y="{baseline+53}" text-anchor="middle" font-size="15" font-weight="700" fill="#294a54">{year_label}</text>')
     parts.append(f'<line x1="24" y1="{baseline}" x2="{width-24}" y2="{baseline}" stroke="#cfdddc" pointer-events="none"/></svg>')
     return "".join(parts)
 
@@ -148,7 +147,7 @@ def year_details(rows: list[dict], kind: str, start: int, as_of: date, roles: di
                 <p class="history-authors">{authors}</p><p class="history-citation">{esc(citation_text(row['entry']))} · {year}</p></li>''')
         empty = '<p class="history-empty">No records for this year in the current library.</p>'
         panels.append(f'''<details class="history-year" id="history-{kind}-{year}" data-history-panel="{kind}-{year}" data-history-count="{len(records)}">
-            <summary>{year} <span>{len(records)} {'papers' if kind == 'papers' else 'patent records'}</span></summary>
+            <summary>{year} · {'Papers' if kind == 'papers' else 'Patents'} <span>{len(records)} {'papers' if kind == 'papers' else 'patent records'}</span></summary>
             {f'<ol>{"".join(entries)}</ol>' if entries else empty}</details>''')
     return "".join(panels)
 
@@ -170,23 +169,17 @@ def activity_section(activity: dict, recent_papers: list[dict], roles: dict, mem
         <div class="earlier-stat" data-earlier-kind="patents"><strong>{len(earlier['patents'])}</strong><span>Patent records</span><small>Applications and grants · not unique inventions</small></div>
         <p class="earlier-note">Period totals, shown separately from the annual chart below. Industrial research output is not fully reflected in public records.</p>
       </aside>'''
-    trends = []
-    for kind, title, description in (
-        ("papers", "Publications by year",
-         "Each dot is one journal or conference paper. Select a dot or year to explore its papers."),
-        ("patents", "Patent records by year",
-         "Each symbol is one library record, not a unique invention or patent family. Open circles: Korea (KR); solid circles: outside Korea. Select a symbol or year to inspect its records."),
-    ):
-        legend = '<span><i class="journal-marker"></i>Journal article</span><span><i class="conference-marker"></i>Conference paper</span>' if kind == "papers" else '<span><i class="patent-kr-marker"></i>Korea (KR)</span><span><i class="patent-marker"></i>Outside Korea</span><span><i class="patent-unknown-marker"></i>Unspecified</span>'
-        trends.append(f'''<section class="history-trend" id="trend-{kind}" data-trend-panel="{kind}" aria-labelledby="trend-{kind}-heading">
-          <div class="trend-heading"><div><h3 id="trend-{kind}-heading">{title}</h3><p>{description}</p></div>
-          <div class="history-legend">{legend}<span><i class="recent-marker"></i>Recent 5 years</span></div></div>
-          <div class="history-scroll" tabindex="0" role="region" aria-label="Scrollable {kind} timeline">{plot_svg(annual[kind],kind,annual_start,as_of,activity['recent_start'])}</div>
-          <p class="history-axis-note"><span>{annual_start}–{as_of.year} · One column per year · Scroll on smaller screens</span><span>* {as_of.year} through {as_of.strftime('%d %b %Y')}</span></p>
-          <div class="history-selection-tools" hidden><p class="history-selection-status" role="status" aria-live="polite"></p><button type="button" class="history-close">Close selection ×</button></div>
-          <div class="history-years">{year_details(annual[kind],kind,annual_start,as_of,roles,members)}</div>
-          {'<p class="patent-coverage-note">Domestic (KR) coverage is incomplete and will be expanded. This chart reflects the public library, not all domestic patent activity.</p>' if kind == 'patents' else ''}
-        </section>''')
+    details = ''.join(f'<div class="history-detail-group" data-trend-panel="{kind}"><h4 class="history-detail-heading">{kind.title()}</h4><div class="history-years">{year_details(annual[kind],kind,annual_start,as_of,roles,members)}</div></div>' for kind in ("papers", "patents"))
+    unknown_legend = '<span><i class="patent-unknown-marker"></i>Unspecified office</span>' if any(r.get("jurisdiction")=="unknown" for r in annual["patents"]) else ''
+    trend = f'''<section class="history-trend" id="trend-combined" aria-labelledby="trend-combined-heading">
+        <div class="trend-heading"><div><h3 id="trend-combined-heading">Papers &amp; patents by year</h3><p>Left: papers · Right: patent records. One symbol per record; counts are separate, not combined. Select a symbol or stack label to explore.</p></div>
+        <div class="history-legend"><div><b>Papers</b><span><i class="journal-marker"></i>Journal</span><span><i class="conference-marker"></i>Conference</span></div><div><b>Patents</b><span><i class="patent-kr-marker"></i>Korea (KR)</span><span><i class="patent-marker"></i>Outside Korea</span>{unknown_legend}</div></div></div>
+        <div class="history-scroll" tabindex="0" role="region" aria-label="Scrollable papers and patents timeline">{plot_svg(annual,annual_start,as_of)}</div>
+        <p class="history-axis-note"><span>{annual_start}–{as_of.year} · Two stacks per year · Scroll on smaller screens</span><span>* {as_of.year} through {as_of.strftime('%d %b %Y')}</span></p>
+        <div class="history-selection-tools" hidden><p class="history-selection-status" role="status" aria-live="polite"></p><button type="button" class="history-close">Close selection ×</button></div>
+        {details}
+        <p class="patent-coverage-note">Domestic (KR) coverage is incomplete and will be expanded. Patent symbols represent library records, not unique inventions or patent families.</p>
+      </section>'''
     return f'''<section class="research-activity" id="research-activity" aria-labelledby="activity-heading">
       <div class="activity-intro"><div><p class="eyebrow">RESEARCH AT A GLANCE</p><h2 id="activity-heading">Ideas, built over time.</h2></div>
         <p>Research by Changwook Jeong and collaborators, across academic and industrial settings.</p></div>
@@ -198,9 +191,9 @@ def activity_section(activity: dict, recent_papers: list[dict], roles: dict, mem
       </div>
       {earlier_summary}
       <div class="history-heading"><div><p class="eyebrow">{annual_start} → {as_of.year} · ANNUAL OUTPUT</p><h2>Research at UNIST</h2></div>
-        <div class="trend-switch" role="group" aria-label="Choose research trend" hidden><button type="button" data-trend="papers" aria-pressed="true">Papers <span>{len(annual['papers'])}</span></button><button type="button" data-trend="patents" aria-pressed="false">Patents <span>{len(annual['patents'])}</span></button></div></div>
+        <p class="annual-totals">{len(annual['papers'])} papers <span>·</span> {len(annual['patents'])} patent records</p></div>
       <p class="history-period-note">By record year since joining UNIST in {annual_start}; some records may reflect work begun earlier.</p>
-      {''.join(trends)}
+      {trend}
       <p class="activity-method">Counts come from our publication library and update with the bibliography. Papers exclude invited talks, books and patents. The {start}–{annual_start-1} period is summarized cumulatively, not plotted as an annual data point; annual charts start in {annual_start}. Patent years follow each library record, which may represent an application, publication or grant; national counterparts and related records may be counted separately. These are not patent-family counts or a measure of current legal status. No first-online date, filing date or priority date is inferred.</p>
       <a class="activity-library-link" href="../" target="_blank" rel="noopener">Browse the full publication and patent library ↗</a>
     </section>'''
