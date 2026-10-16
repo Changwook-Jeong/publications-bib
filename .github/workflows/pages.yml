@@ -44,7 +44,7 @@ jobs:
         run: python scripts/build_publications.py --output _site
 
       - name: Build separate research-summary preview
-        run: python scripts/build_research.py --output _site/research-preview
+        run: python scripts/build_explorer.py --output _site/research-preview
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

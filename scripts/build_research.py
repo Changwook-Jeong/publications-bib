@@ -54,9 +54,12 @@ def load_summaries(data_path: Path, bib_path: Path) -> list[dict]:
         if not isinstance(paper["findings"], list) or len(paper["findings"]) < 2:
             raise ValueError("At least two findings are required")
         doi = paper.get("doi") or clean_tex(entry.fields.get("doi", ""))
-        if not re.fullmatch(r"10\.\d{4,9}/[^\s<>\"']+", doi):
+        if doi and not re.fullmatch(r"10\.\d{4,9}/[^\s<>\"']+", doi):
             raise ValueError("A valid primary-paper DOI is required")
-        paper.update(entry=entry, doi=doi, year=entry_year(entry), month=entry_month(entry),
+        url = "https://doi.org/" + doi if doi else paper.get("url", "")
+        if not re.fullmatch(r"https://(?:openreview\.net|proceedings\.mlr\.press|doi\.org)/[^\s<>\"']+", url):
+            raise ValueError("A valid primary-paper DOI or publisher URL is required")
+        paper.update(entry=entry, doi=doi, url=url, year=entry_year(entry), month=entry_month(entry),
                      title=clean_tex(entry.fields.get("title", "")),
                      venue=clean_tex(entry.fields.get("journal") or entry.fields.get("booktitle", "")))
         paper["date_label"] = f'{MONTH_NAMES[paper["month"]]} {paper["year"]}'.strip()
@@ -139,7 +142,7 @@ def detail_page(paper: dict, papers: list[dict], roles: dict, members: list[str]
       <section id="paper" class="paper-reference"><p class="eyebrow">ORIGINAL PAPER</p><h2>{esc(paper['title'])}</h2>
         <p class="authors">{render_authors(paper['entry'], roles, members)}</p><p class="citation">{esc(citation)} · {paper['year']}</p>
         <p class="author-legend">* Corresponding author · † Equal contribution · Underlined: group member</p>
-        <a class="paper-link" href="https://doi.org/{esc(paper['doi'])}" target="_blank" rel="noopener">Read the original paper <span aria-hidden="true">↗</span></a>
+        <a class="paper-link" href="{esc(paper['url'])}" target="_blank" rel="noopener">Read the original paper <span aria-hidden="true">↗</span></a>
         <details><summary>About this explanation</summary><p>AI-assisted summary checked against the full text, not reviewed by the authors. {esc(paper['source_note'])}</p><p>Evidence locations: {esc(paper['source_locator'])}. This page does not reproduce or redistribute the source PDF.</p></details></section>
     </div></div><aside class="related"><h2>Continue exploring</h2><div>{other}</div></aside>
 </main>'''

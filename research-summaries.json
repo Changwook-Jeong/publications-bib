@@ -1,6 +1,18 @@
 {
   "schema_version": 1,
   "updated": "2026-10-17",
+  "publication_dates": {
+    "huhContextInformedNeuralODEs2025a": "2025-10-06",
+    "kimMobilityOverestimationThinFilm2025a": "2025-10-21",
+    "hanContactPhysics2D2025a": "2025-11-04",
+    "kimEngineeringAmorphousIGZO2025": "2025-12-09",
+    "simInterfacialControlDegradation2025": "2026-01-05",
+    "leeBuckingham$pi$InvariantTestTime2025": "2026-04-25",
+    "wangWaferScaleSelfLimitingEpitaxy": "2026-05-08",
+    "jangUnifiedMechanismStrain2026": "2026-06-23",
+    "huhIdentifiableSmoothConjugacy2026": "2026-06-24",
+    "parkNeuralDomainDecomposition2026": "2026-07-27"
+  },
   "papers": [
     {
       "citation_key": "huhScalingTheoryNonlinear2026",
@@ -18,7 +30,11 @@
       ],
       "significance": "The work connects an unusual electrical signature to the microscopic states and measurement choices behind it. This can help researchers interpret cryogenic transistor data and distinguish material-quality changes from the conditions used to measure switching.",
       "scope": "This is a transport-theory study, not a demonstration of a newly fabricated transistor or quantum-computing circuit. Conclusions about the current-dependent floor apply to the localized-tail model; conductive tail states have different saturation behavior.",
-      "skills": ["Carrier transport", "Device electrostatics", "Defect characterization"],
+      "skills": [
+        "Carrier transport",
+        "Device electrostatics",
+        "Defect characterization"
+      ],
       "source_note": "Full text: author's accepted manuscript stored in Zotero. Journal citation is taken from the bibliography.",
       "source_locator": "Sections II-III; Figs. 1-5; Conclusion",
       "full_text_checked": true
@@ -39,7 +55,11 @@
       ],
       "significance": "The framework links simulation with design: material distributions, physical response and design objectives can be connected in one differentiable workflow. It offers a route toward thermal-stress-aware semiconductor system and layout co-optimization.",
       "scope": "The demonstrations concern steady-state thermal conduction and thermoelastic problems. The 10-billion-cell result establishes executable scale, not benchmarked accuracy for every cell at that scale. The layout optimization uses a simplified metal-density-to-conductivity mapping, not a complete production design-rule flow.",
-      "skills": ["Thermal-stress analysis", "Scientific machine learning", "Design optimization"],
+      "skills": [
+        "Thermal-stress analysis",
+        "Scientific machine learning",
+        "Design optimization"
+      ],
       "doi": "10.1145/3770743.3803918",
       "source_note": "Full text: seven-page DAC 2026 paper stored in Zotero. The DOI is printed in the paper.",
       "source_locator": "Sections 3-4; Figs. 3, 5-7; Conclusion",
@@ -61,9 +81,347 @@
       ],
       "significance": "The mechanism provides a physical basis for choosing strain and thermal-processing strategies in oxide electronics. It connects atomic-scale defect engineering to the device-level goals of controlling threshold voltage, switching behavior and reliability.",
       "scope": "The calculations establish mechanism-level trends using a limited set of oxygen-vacancy configurations in IGZO. They are not a statistically complete model of all defects formed during fabrication, nor a guarantee that annealing delocalizes every vacancy.",
-      "skills": ["Atomistic materials physics", "Process-defect relationships", "Device reliability"],
+      "skills": [
+        "Atomistic materials physics",
+        "Process-defect relationships",
+        "Device reliability"
+      ],
       "source_note": "Full text: published Chemistry of Materials article stored in Zotero.",
       "source_locator": "Sections 2.2-2.3; Table 1; Sections 3-4",
+      "full_text_checked": true
+    },
+    {
+      "citation_key": "huhIdentifiableSmoothConjugacy2026",
+      "slug": "learning-dynamical-structure",
+      "topic": "Physics-grounded AI",
+      "areas": [
+        "ai"
+      ],
+      "headline": "Learning the structure behind changing dynamics",
+      "summary": "A model can fit observed trajectories yet miss the system's underlying structure. Adversarial orthogonality helps distinguish a change of coordinates from a genuine change in dynamics.",
+      "takeaway": "Good predictions should preserve meaningful dynamical structure, not just short trajectories.",
+      "question": "How can a learned dynamical model adapt when its starting model has the wrong qualitative behavior, without mixing up coordinate changes and real physical changes?",
+      "approach": "The framework jointly learns a smooth invertible transformation and low-dimensional adjustments to source dynamics. An adversarial orthogonality constraint separates adjustments from changes that a coordinate transformation could already explain.",
+      "findings": [
+        "The method separates coordinate-dependent variation from intrinsic changes in the dynamics.",
+        "Benchmarks recover canonical structures including bifurcations, symmetries and invariant sets more faithfully than the reported baselines."
+      ],
+      "significance": "This offers a route to scientific models that remain interpretable when observations are limited and a system changes regime.",
+      "scope": "The evidence comes from dynamical-system benchmarks. It is not a demonstration of a complete semiconductor manufacturing model; extensions to more complex and higher-dimensional corrections remain open.",
+      "skills": [
+        "Dynamical systems",
+        "Scientific machine learning",
+        "Model interpretability"
+      ],
+      "url": "https://openreview.net/forum?id=heynVhNKjN",
+      "source_locator": "Introduction; Section 4; Section 5",
+      "source_note": "Full text: ICML 2026 paper stored in Zotero.",
+      "full_text_checked": true
+    },
+    {
+      "citation_key": "islamThicknessScalingRoughnessInduced2026",
+      "slug": "ultrathin-mobility-cliff",
+      "topic": "Device physics",
+      "areas": [
+        "devices"
+      ],
+      "headline": "How thin is too thin for a transistor channel?",
+      "summary": "Thinner channels improve gate control, but roughness can sharply reduce carrier mobility. A scaling framework connects this mobility cliff to confinement and a critical channel thickness.",
+      "takeaway": "Channel thickness uniformity becomes critical near the mobility cliff.",
+      "question": "Can the mobility loss in very thin channels be described across different semiconductor technologies with a common physical framework?",
+      "approach": "The study decomposes measured long-channel mobility into scattering contributions, then accounts for finite potential barriers and wavefunction penetration to explain thickness-dependent scaling.",
+      "findings": [
+        "Finite confinement helps explain why the roughness-related thickness exponent differs from the ideal infinite-well prediction.",
+        "A compact analytical model extracts a critical thickness and its associated mobility trade-off from thickness-dependent data."
+      ],
+      "significance": "The framework connects interface quality and process control to the scaling choices made for future thin-body transistors.",
+      "scope": "This is a long-channel mobility scaling analysis across reported technologies. It does not establish a complete short-channel CFET design rule or eliminate other sources of variability.",
+      "skills": [
+        "Quantum confinement",
+        "Carrier scattering",
+        "Technology scaling"
+      ],
+      "source_locator": "Abstract; Sections II-IV",
+      "source_note": "Full text: IEEE EDL article stored in Zotero.",
+      "full_text_checked": true
+    },
+    {
+      "citation_key": "leeBuckingham$pi$InvariantTestTime2025",
+      "slug": "dimensionless-ai-surrogates",
+      "topic": "Physics-grounded AI",
+      "areas": [
+        "ai"
+      ],
+      "headline": "Making simulation AI recognize the same physics",
+      "summary": "Two inputs can look very different to a neural model while describing equivalent physics. Dimensionless test-time projection brings those inputs closer to familiar examples without retraining the model.",
+      "takeaway": "A change in physical scale need not be a change in the underlying physics.",
+      "question": "How can a pretrained simulation surrogate remain useful when input units, magnitudes and physical scales shift beyond its training examples?",
+      "approach": "Buckingham π-invariants constrain a log-space input projection toward the training distribution. Cluster representatives reduce the cost of finding suitable reference inputs.",
+      "findings": [
+        "The projection improves out-of-distribution predictions in the reported thermal-conduction and linear-elasticity benchmarks without updating model weights.",
+        "Clustering reduces projection cost while retaining much of the accuracy benefit of comparing with every training sample."
+      ],
+      "significance": "The work connects dimensional analysis with reusable AI tools for thermal and stress simulation.",
+      "scope": "The method assumes appropriate governing invariants. Highly irregular fields, empirical components and shifts outside the trained invariant range can still limit performance.",
+      "skills": [
+        "Dimensional analysis",
+        "Thermal-stress simulation",
+        "Robust AI"
+      ],
+      "url": "https://openreview.net/forum?id=2FFhwssQda",
+      "source_locator": "Sections 1, 4, 6-7",
+      "source_note": "Full text: ICLR 2026 paper stored in Zotero.",
+      "full_text_checked": true
+    },
+    {
+      "citation_key": "wangWaferScaleSelfLimitingEpitaxy",
+      "slug": "wafer-scale-boron-nitride",
+      "topic": "Materials & processing",
+      "areas": [
+        "materials",
+        "memory"
+      ],
+      "headline": "Controlling atomic stacking across a wafer",
+      "summary": "The stacking order of two boron nitride layers changes their functionality. Step-edge-guided growth produces uniform Bernal-stacked bilayers and integrates them into two-dimensional transistor arrays.",
+      "takeaway": "Atomic stacking can be engineered as a wafer-scale process variable.",
+      "question": "How can a metastable, functional stacking arrangement be grown uniformly rather than obtained only in isolated two-dimensional flakes?",
+      "approach": "Flow-modulated metal-organic chemical vapor deposition is combined with monoatomic nickel step edges. Atomic-resolution characterization and first-principles calculations connect growth conditions to stacking selection.",
+      "findings": [
+        "The reported growth route favors self-limited Bernal-stacked bilayers on nickel/sapphire substrates.",
+        "The films function as thin dielectric interlayers in MoS2 transistors, with polarization-linked nonvolatile switching demonstrated."
+      ],
+      "significance": "The study links crystal growth, interface engineering and functional device integration.",
+      "scope": "The demonstrated material/substrate combination and transistor arrays do not establish a production-ready process for all wafer sizes or a qualified commercial memory technology.",
+      "skills": [
+        "Epitaxial growth",
+        "2D integration",
+        "Ferroelectric functionality"
+      ],
+      "source_locator": "Abstract; Section 3; Experimental Section",
+      "source_note": "Full text: Small article stored in Zotero.",
+      "full_text_checked": true
+    },
+    {
+      "citation_key": "namCharacterizationThermalStability2026",
+      "slug": "oxide-transistors-in-the-heat",
+      "topic": "Device physics",
+      "areas": [
+        "devices",
+        "materials"
+      ],
+      "headline": "What happens when oxide transistors get hot?",
+      "summary": "IGZO transistors show an unusual mobility increase at elevated temperatures. Measurements and transport modeling separate the resilience of the channel from degradation in the gate dielectric.",
+      "takeaway": "A stable channel does not automatically mean a stable complete transistor stack.",
+      "question": "How well can an oxide-semiconductor channel withstand high temperatures, and why can its measured mobility increase rather than decrease?",
+      "approach": "ALD-grown IGZO FETs are measured in situ up to 750 °C. Scattering-based mobility modeling and atomistic information are used to interpret the temperature-dependent transport.",
+      "findings": [
+        "The study reports increased field-effect mobility at intermediate high temperatures, consistent with reduced grain-boundary scattering.",
+        "Channel performance remains relatively stable in the reported 600 °C hold, while gate-dielectric degradation becomes an important limitation at higher temperatures."
+      ],
+      "significance": "Separating channel and dielectric behavior helps evaluate materials for demanding thermal budgets and extreme-environment electronics.",
+      "scope": "Specific devices and test durations were studied. Operation up to 750 °C is not equivalent to reliable long-term switching at that temperature or qualification for a finished product.",
+      "skills": [
+        "High-temperature characterization",
+        "Transport physics",
+        "Materials integration"
+      ],
+      "source_locator": "Abstract; Sections II-III",
+      "source_note": "Full text: IEEE EDL article stored in Zotero.",
+      "full_text_checked": true
+    },
+    {
+      "citation_key": "shihFastOpticsFreeExtraction2026",
+      "slug": "electrical-defect-metrology",
+      "topic": "Materials & reliability",
+      "areas": [
+        "devices",
+        "materials"
+      ],
+      "headline": "Reading hidden defects with an electrical pulse",
+      "summary": "Single-pulse charge pumping probes traps in ultrathin oxide transistors without optical access. Electrical measurements and atomistic calculations connect the extracted signals to defect-related states.",
+      "takeaway": "Fast electrical metrology can connect process changes with microscopic defect physics.",
+      "question": "How can interface traps and subgap states be characterized in thin or buried channels where conventional optical measurements are difficult?",
+      "approach": "The collaboration combines single-pulse charge pumping, a reliability model and hybrid-DFT calculations for oxide TFTs. Our group's contribution includes the first-principles modeling used to interpret defect states.",
+      "findings": [
+        "The pulse-based measurements extract repeatable interface-trap information and improve threshold-shift predictions when included in the reported reliability model.",
+        "Annealing-related subgap-state changes are interpreted through band-tail and oxygen-vacancy contributions."
+      ],
+      "significance": "The work links electrical characterization, process optimization and atomistic defect understanding.",
+      "scope": "The demonstration uses specific In2O3 and IGZO devices. Broader applicability to other thin-body architectures remains a proposed extension rather than a universal validation.",
+      "skills": [
+        "Defect metrology",
+        "Reliability modeling",
+        "Atomistic interpretation"
+      ],
+      "source_locator": "Abstract; Sections III-IV; Acknowledgements",
+      "source_note": "Full text: IRPS 2026 paper stored in Zotero.",
+      "full_text_checked": true
+    },
+    {
+      "citation_key": "hanNonPerturbativeOxygenVacancy2026",
+      "slug": "tracking-ions-in-memory",
+      "topic": "Memory & computing",
+      "areas": [
+        "memory",
+        "materials"
+      ],
+      "headline": "Following the ions that change a memory's state",
+      "summary": "An independently contacted double-layer ECRAM lets researchers measure both active layers during switching. Their reciprocal response offers insight into how oxygen vacancies move.",
+      "takeaway": "Observing both sides of the device reveals more than a single conductance trace.",
+      "question": "How can the movement of oxygen vacancies be tracked during electrochemical memory operation without relying only on destructive post-measurement analysis?",
+      "approach": "IRIS-ECRAM uses separately contacted tungsten-oxide layers to measure conductance changes on both sides of an electrolyte during switching.",
+      "findings": [
+        "The two layers show reciprocal potentiation and depression, linking their electrical response to electrochemical ion motion.",
+        "The experiments identify a temporary-reservoir role for the electrolyte and include a small-array demonstration."
+      ],
+      "significance": "Understanding ion pathways can guide the structure and operating conditions of analog memory devices for in-memory computing.",
+      "scope": "The paper includes a 2 × 2 array; this is not evidence of large-scale, production-ready integration. More complex ECRAM systems and larger arrays require further validation.",
+      "skills": [
+        "Electrochemical memory",
+        "Ion dynamics",
+        "In-memory computing"
+      ],
+      "source_locator": "Abstract; Section 3; Experimental Section",
+      "source_note": "Full text: Small article stored in Zotero. The library records the publication year but not the month.",
+      "full_text_checked": true
+    },
+    {
+      "citation_key": "simInterfacialControlDegradation2025",
+      "slug": "interfaces-and-material-aging",
+      "topic": "Materials & reliability",
+      "areas": [
+        "materials",
+        "devices"
+      ],
+      "headline": "Why a 2D material ages differently on different surfaces",
+      "summary": "A neighboring layer can change how MoTe2 reacts with air. Controlled exposures and first-principles calculations connect interface charge redistribution with oxidation pathways.",
+      "takeaway": "The supporting interface is part of a material's reliability strategy.",
+      "question": "Why does the same air-sensitive semiconductor degrade differently when it contacts a metal rather than an insulating layer?",
+      "approach": "The collaboration studies MoTe2 heterointerfaces under ambient and controlled oxygen/moisture exposure, supported by first-principles analysis of electronic redistribution.",
+      "findings": [
+        "Metallic interfaces suppress rapid defect-driven degradation relative to the studied insulating supports.",
+        "Oxygen and moisture play different roles: basal-plane oxidation and accelerated defect-site corrosion are distinguished."
+      ],
+      "significance": "Interface selection can complement encapsulation when designing stable two-dimensional electronic devices.",
+      "scope": "These are material-pair-specific observations, not proof that any metal prevents oxidation or that a complete device is lifetime-qualified.",
+      "skills": [
+        "2D heterointerfaces",
+        "Oxidation mechanisms",
+        "Device reliability"
+      ],
+      "source_locator": "Abstract; Introduction; Results and discussion",
+      "source_note": "Full text: Advanced Functional Materials article stored in Zotero; displayed date follows the library's journal record.",
+      "full_text_checked": true
+    },
+    {
+      "citation_key": "kimEngineeringAmorphousIGZO2025",
+      "slug": "igzo-composition-and-thickness",
+      "topic": "Materials & processing",
+      "areas": [
+        "materials",
+        "devices"
+      ],
+      "headline": "Balancing mobility and threshold voltage in IGZO",
+      "summary": "Composition and channel thickness affect more than one transistor metric at a time. A multiscale framework explains their coupled influence and identifies structural disorder as a design lever.",
+      "takeaway": "Reducing disorder offers a different lever from simply increasing carrier concentration.",
+      "question": "How can an oxide transistor combine high mobility with enhancement-mode operation when mobility and threshold voltage are coupled?",
+      "approach": "Machine-learning-potential molecular dynamics and DFT supply composition-dependent inputs to a transport model including structural disorder, scattering and thin-channel confinement.",
+      "findings": [
+        "The model connects mobility-threshold trends across the studied compositions and thicknesses through their carrier-concentration dependence.",
+        "Changing zinc content to reduce structural disorder shifts the trade-off, rather than merely adding more carriers."
+      ],
+      "significance": "The framework translates atomistic material choices into device-level targets and highlights why material and geometry optimization must be considered together.",
+      "scope": "The results establish trends in the modeled IGZO systems, not a universally optimal composition or a complete fabrication process window.",
+      "skills": [
+        "Amorphous materials",
+        "Multiscale transport",
+        "Device-material co-design"
+      ],
+      "source_locator": "Abstract; Introduction; Section 4",
+      "source_note": "Full text: ACS Omega article stored in Zotero.",
+      "full_text_checked": true
+    },
+    {
+      "citation_key": "jangWaferScaleFabricationEdgeContacted2025",
+      "slug": "growing-clean-edge-contacts",
+      "topic": "Materials & processing",
+      "areas": [
+        "materials",
+        "devices"
+      ],
+      "headline": "Growing the channel and its edge contacts together",
+      "summary": "Alloying-mediated phase control forms semiconducting channels and semimetallic contacts in a coordinated growth route. Clean lateral interfaces help overcome a bottleneck in p-type 2D transistors.",
+      "takeaway": "Contact engineering begins with how the interface is formed.",
+      "question": "How can reproducible, clean edge contacts be made for p-type two-dimensional channels without the oxidation and alignment problems of a separate metallization step?",
+      "approach": "Selective-area alloying controls the relative stability of MoTe2 phases, enabling lateral junctions between semiconducting channels and tungsten-alloyed semimetal contacts.",
+      "findings": [
+        "The reported one-step edge-contact structures outperform comparison devices made with two-step metallization.",
+        "Low contact resistivity is retained over the studied short contact-length range, supported by clean interfaces and reduced gap states."
+      ],
+      "significance": "The work connects phase engineering and scalable synthesis to the contact challenges of compact complementary 2D electronics.",
+      "scope": "The reported transistors and contact-scaling tests are not a complete demonstration of a manufacturable complementary integrated circuit.",
+      "skills": [
+        "Phase engineering",
+        "Contact integration",
+        "2D transistors"
+      ],
+      "source_locator": "Abstract; Section 3; Experimental Section",
+      "source_note": "Full text: Small Science article stored in the local Zotero attachment folder.",
+      "full_text_checked": true
+    },
+    {
+      "citation_key": "hanContactPhysics2D2025a",
+      "slug": "semimetal-contact-physics",
+      "topic": "Device physics",
+      "areas": [
+        "devices",
+        "materials"
+      ],
+      "headline": "A better rule for designing 2D contacts",
+      "summary": "Work function alone does not capture every semiconductor-contact barrier. Atomistic calculations show how symmetry, contact orientation and interfacial states reshape the barrier.",
+      "takeaway": "Contact geometry and electronic hybridization belong in barrier predictions.",
+      "question": "Why do simple work-function-based predictions miss important behavior at MoS2-semimetal interfaces?",
+      "approach": "DFT compares type-II Weyl and Dirac semimetal contacts, then extends the Schottky-Mott picture to include interface-induced changes in vacuum levels, band edges and orbital interactions.",
+      "findings": [
+        "The studied Weyl-type interfaces show contact-angle-sensitive hybridization and a downward extension of the semiconductor conduction-band edge.",
+        "Including these interfacial effects improves the reported barrier-height predictions relative to the conventional rule."
+      ],
+      "significance": "The analysis provides a physical basis for choosing and orienting low-resistance contacts in two-dimensional electronics.",
+      "scope": "This is a first-principles study of selected material interfaces. Additional experimental validation and extension to other contact systems remain necessary.",
+      "skills": [
+        "Contact physics",
+        "Band alignment",
+        "Atomistic device design"
+      ],
+      "source_locator": "Abstract; Conclusion; Methods",
+      "source_note": "Full text: ACS Nano article stored in Zotero. The library date is the journal record, not its earlier online date.",
+      "full_text_checked": true
+    },
+    {
+      "citation_key": "kimMobilityOverestimationThinFilm2025a",
+      "slug": "measuring-mobility-correctly",
+      "topic": "Device physics",
+      "areas": [
+        "devices"
+      ],
+      "headline": "When a high mobility number is a geometry effect",
+      "summary": "Current flowing outside a transistor's nominal channel can inflate extracted mobility. Measurements, TCAD and an analytical model show how to identify and correct the geometry effect.",
+      "takeaway": "Reliable material comparisons require reliable mobility extraction.",
+      "question": "Can a transistor appear to have better carrier mobility simply because its channel island extends beyond the source and drain electrodes?",
+      "approach": "The study combines device measurements, TCAD and conformal-mapping-based analytical modeling to quantify fringe-current contributions.",
+      "findings": [
+        "A channel island larger than the electrode-defined channel can produce an inflated field-effect mobility, with device aspect ratio affecting the error.",
+        "The proposed corrections connect the extracted value to geometry and enable more consistent comparisons."
+      ],
+      "significance": "Separating measurement geometry from intrinsic transport helps researchers evaluate materials and process improvements objectively.",
+      "scope": "The correction addresses the studied fringe-current geometry. Other extraction errors, such as contact resistance or inappropriate capacitance assumptions, still need separate checks.",
+      "skills": [
+        "Electrical characterization",
+        "TCAD",
+        "Measurement integrity"
+      ],
+      "source_locator": "Abstract; Conclusion; Fig. 6",
+      "source_note": "Full text: ACS Nano article stored in Zotero. The library's issue date is used for the recent-paper window.",
       "full_text_checked": true
     }
   ]
