@@ -94,11 +94,13 @@ parameters preserve browsing filters; a paper fragment can open its explanation
 directly. Motion is brief and user-triggered, with reduced-motion preferences
 respected. No carousel or automatic floating animation is used.
 
-Cards use a subtle full-border color and a stronger top edge for their displayed
+Cards use a 2px topic-colored border, a 5px top edge, a tinted upper background
+and a labeled topic badge for their displayed
 primary research area: devices blue, materials green, memory ochre, AI muted
 purple, and unclassified records gray. Overlapping topic filters are unchanged;
 color is a secondary cue alongside the visible topic label. List view retains
-the same palette with a stronger left edge.
+the same palette with a 5px left edge. The overview fingerprints its CSS URL so
+updated colors do not depend on an old browser stylesheet cache expiring.
 
 `publication_dates` complements the bibliography's year/month with previously
 verified library days. These are library publication/issue dates, not necessarily

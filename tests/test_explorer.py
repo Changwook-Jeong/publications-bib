@@ -1,3 +1,4 @@
+import hashlib
 import json
 import re
 import sys
@@ -59,6 +60,8 @@ class ExplorerTests(unittest.TestCase):
             self.assertIn('data-view="list"',overview)
             self.assertIn('id="research-search"',overview)
             self.assertIn("17 Oct 2025",overview)
+            css_version=hashlib.sha256((ROOT/"web"/"research.css").read_bytes()).hexdigest()[:12]
+            self.assertIn(f'href="research.css?v={css_version}"',overview)
             for area,label in explorer.TOPICS.items():
                 if any(area in p["areas"] for p in papers):
                     self.assertIn(f'data-filter="{area}"',overview)
@@ -89,9 +92,11 @@ class ExplorerTests(unittest.TestCase):
             self.assertIsNotNone(border,area)
             borders.append(border.group(1))
         self.assertEqual(len(set(borders)),len(explorer.TOPICS))
-        self.assertIn('border:1px solid var(--card-border)',css)
-        self.assertIn('border-top:3px solid var(--card-accent)',css)
-        self.assertIn('border-left:3px solid var(--card-accent)',css)
+        self.assertIn('border:2px solid var(--card-border)',css)
+        self.assertIn('border-top:5px solid var(--card-accent)',css)
+        self.assertIn('border-left:5px solid var(--card-accent)',css)
+        self.assertIn('background:linear-gradient(180deg,var(--card-tint),#fff 110px)',css)
+        self.assertIn('background:var(--card-tint);border:1px solid var(--card-border)',css)
         paper=dict(explorer.load_catalog(ROOT/"research-summaries.json",ROOT/"publications.bib",AS_OF)[0])
         paper["areas"]=["ai","devices"]
         card=explorer.card(paper,1)

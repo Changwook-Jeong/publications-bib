@@ -170,7 +170,9 @@ def overview(papers: list[dict], as_of: date, roles: dict, members: list[str], a
         <div class="reader-scroll"><div id="reader-content"></div></div></dialog>
       {''.join(templates)}
     </main>'''
+    css_version = hashlib.sha256((ROOT / "web" / "research.css").read_bytes()).hexdigest()[:12]
     return summaries.shell("Research explorer", content).replace(
+        'href="research.css"', f'href="research.css?v={css_version}"').replace(
         '<script src="research.js"></script>',
         '<script src="research-activity.js"></script>\n  <script src="research.js"></script>')
 
