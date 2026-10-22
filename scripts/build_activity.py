@@ -174,7 +174,7 @@ def activity_section(activity: dict, recent_papers: list[dict], roles: dict, mem
     details = ''.join(f'<div class="history-detail-group" data-trend-panel="{kind}"><h4 class="history-detail-heading">{kind.title()}</h4><div class="history-years">{year_details(annual[kind],kind,annual_start,as_of,roles,members)}</div></div>' for kind in ("papers", "patents"))
     unknown_legend = '<span><i class="patent-unknown-marker"></i>Unspecified office</span>' if any(r.get("jurisdiction")=="unknown" for r in annual["patents"]) else ''
     trend = f'''<section class="history-trend" id="trend-combined" aria-labelledby="trend-combined-heading">
-        <div class="trend-heading"><div><h3 id="trend-combined-heading">Papers &amp; patents by year</h3><p>Select a dot to explore.</p></div>
+        <div class="trend-heading"><div><p class="eyebrow">RESEARCH OUTPUT</p><h3 id="trend-combined-heading">Papers &amp; patents by year</h3><p>Select a dot to explore.</p></div>
         <div class="history-legend"><div><b>Papers</b><span><i class="journal-marker"></i>Journal</span><span><i class="conference-marker"></i>Conference</span></div><div><b>Patents</b><span><i class="patent-kr-marker"></i>Korea (KR)</span><span><i class="patent-marker"></i>Outside Korea</span>{unknown_legend}</div></div></div>
         <div class="history-scroll" tabindex="0" role="region" aria-label="Scrollable papers and patents timeline">{plot_svg(annual,annual_start,as_of,compact=bool(citations))}</div>
         <p class="history-axis-note"><span>KR coverage: partial</span><span>* Through {as_of.strftime('%d %b %Y')}</span></p>
