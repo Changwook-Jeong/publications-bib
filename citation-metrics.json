@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "source": "Google Scholar profile screenshot supplied by Changwook Jeong",
+  "source_url": "https://scholar.google.com/citations?user=CPYw1roAAAAJ&hl=en",
+  "provided_on": "2026-10-22",
+  "snapshot_date": null,
+  "approximate": true,
+  "partial_year": 2026,
+  "scope": "PI's complete Google Scholar profile, including earlier academic and industrial research; not citations to UNIST-group papers only.",
+  "annual_citations": {"2019": 240, "2020": 180, "2021": 230, "2022": 240, "2023": 280, "2024": 310, "2025": 390, "2026": 430}
+}

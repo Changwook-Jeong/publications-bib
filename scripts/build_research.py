@@ -21,6 +21,7 @@ from build_publications import (
 
 ROOT = Path(__file__).resolve().parents[1]
 GROUP = "https://sites.google.com/view/jeong-research-group/"
+PUBLIC_RESEARCH = "https://changwook-jeong.github.io/publications-bib/research-preview/"
 MONTH_NAMES = ["", "January", "February", "March", "April", "May", "June",
                "July", "August", "September", "October", "November", "December"]
 
@@ -69,12 +70,17 @@ def load_summaries(data_path: Path, bib_path: Path) -> list[dict]:
     return sorted(papers, key=lambda paper: (-paper["year"], -paper["month"], paper["title"].lower()))
 
 
-def shell(title: str, content: str, *, asset_prefix: str = "", detail: bool = False) -> str:
+def shell(title: str, content: str, *, asset_prefix: str = "", detail: bool = False,
+          description: str = "Recent semiconductor research explained by the Jeong Research Group at UNIST.",
+          canonical: str = "", structured_data: dict | None = None) -> str:
+    canonical_meta = f'<link rel="canonical" href="{esc(canonical)}">' if canonical else ''
+    json_ld = ('<script type="application/ld+json">' + json.dumps(structured_data,ensure_ascii=False).replace('<','\\u003c') + '</script>') if structured_data else ''
     return f'''<!doctype html>
 <html lang="en"><head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow"><meta name="color-scheme" content="light">
-  <meta name="description" content="Recent semiconductor research explained by the Jeong Research Group at UNIST.">
+  <meta name="description" content="{esc(description)}">
+  {canonical_meta}{json_ld}
   <title>{esc(title)} · Jeong Research Group</title>
   <script>if(new URLSearchParams(location.search).get('embed')==='1')document.documentElement.classList.add('embed');</script>
   <link rel="stylesheet" href="{asset_prefix}research.css">

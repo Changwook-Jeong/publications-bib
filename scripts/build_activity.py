@@ -10,6 +10,8 @@ from datetime import date
 from pathlib import Path
 from urllib.parse import urlsplit
 
+from build_citations import citation_section
+
 from build_publications import (
     citation_text, clean_tex, display_author, entry_category, entry_month,
     entry_year, parse_bibtex, render_authors, split_authors,
@@ -83,14 +85,15 @@ def load_activity(bib: Path, data: Path, as_of: date, start: int = START_YEAR) -
     return groups
 
 
-def plot_svg(groups: dict, start: int, as_of: date) -> str:
+def plot_svg(groups: dict, start: int, as_of: date, compact: bool = False) -> str:
     """Two independent stacks per year, one symbol per record, shared count scale."""
     by_year = {year: {kind: [r for r in groups[kind] if r["year"] == year]
                       for kind in ("papers", "patents")}
                for year in range(start, as_of.year + 1)}
     maximum = max((len(rows) for kinds in by_year.values() for rows in kinds.values()), default=0)
-    step = 14
-    width, height = max(1000, 48 + len(by_year) * 190), max(280, maximum * step + 100)
+    step = 18 if compact else 14
+    width = max(680, 40 + len(by_year) * 128) if compact else max(1000,48+len(by_year)*190)
+    height = max(340 if compact else 280, maximum * step + 100)
     column_width = (width - 48) / max(1, len(by_year))
     baseline = height - 75
     parts = [f'<svg xmlns="http://www.w3.org/2000/svg" class="activity-plot" viewBox="0 0 {width} {height}" font-family="Arial, sans-serif" role="group" aria-label="Papers and patent records by year from {start} to {as_of.year}">',
@@ -152,7 +155,7 @@ def year_details(rows: list[dict], kind: str, start: int, as_of: date, roles: di
     return "".join(panels)
 
 
-def activity_section(activity: dict, recent_papers: list[dict], roles: dict, members: list[str], directions: int) -> str:
+def activity_section(activity: dict, recent_papers: list[dict], roles: dict, members: list[str], directions: int, citations: dict | None = None) -> str:
     start, as_of = activity["start"], activity["as_of"]
     paper_count, patent_count = len(activity["papers"]), len(activity["patents"])
     counts = activity["counts"]
@@ -166,34 +169,33 @@ def activity_section(activity: dict, recent_papers: list[dict], roles: dict, mem
         <div><p class="eyebrow">{start}–{annual_start-1} · CUMULATIVE</p><h3 id="earlier-research-heading">Earlier research</h3>
         <p>Academic and industrial research</p></div>
         <div class="earlier-stat" data-earlier-kind="papers"><strong>{len(earlier['papers'])}</strong><span>Papers</span><small>{earlier_papers['journals']} journal · {earlier_papers['conferences']} conference</small></div>
-        <div class="earlier-stat" data-earlier-kind="patents"><strong>{len(earlier['patents'])}</strong><span>Patent records</span><small>Applications and grants · not unique inventions</small></div>
-        <p class="earlier-note">Period totals, shown separately from the annual chart below. Industrial research output is not fully reflected in public records.</p>
+        <div class="earlier-stat" data-earlier-kind="patents"><strong>{len(earlier['patents'])}</strong><span>Patent records</span><small>Applications &amp; grants</small></div>
       </aside>'''
     details = ''.join(f'<div class="history-detail-group" data-trend-panel="{kind}"><h4 class="history-detail-heading">{kind.title()}</h4><div class="history-years">{year_details(annual[kind],kind,annual_start,as_of,roles,members)}</div></div>' for kind in ("papers", "patents"))
     unknown_legend = '<span><i class="patent-unknown-marker"></i>Unspecified office</span>' if any(r.get("jurisdiction")=="unknown" for r in annual["patents"]) else ''
     trend = f'''<section class="history-trend" id="trend-combined" aria-labelledby="trend-combined-heading">
-        <div class="trend-heading"><div><h3 id="trend-combined-heading">Papers &amp; patents by year</h3><p>Left: papers · Right: patent records. One symbol per record; counts are separate, not combined. Select a symbol or stack label to explore.</p></div>
+        <div class="trend-heading"><div><h3 id="trend-combined-heading">Papers &amp; patents by year</h3><p>Select a dot to explore.</p></div>
         <div class="history-legend"><div><b>Papers</b><span><i class="journal-marker"></i>Journal</span><span><i class="conference-marker"></i>Conference</span></div><div><b>Patents</b><span><i class="patent-kr-marker"></i>Korea (KR)</span><span><i class="patent-marker"></i>Outside Korea</span>{unknown_legend}</div></div></div>
-        <div class="history-scroll" tabindex="0" role="region" aria-label="Scrollable papers and patents timeline">{plot_svg(annual,annual_start,as_of)}</div>
-        <p class="history-axis-note"><span>{annual_start}–{as_of.year} · Two stacks per year · Scroll on smaller screens</span><span>* {as_of.year} through {as_of.strftime('%d %b %Y')}</span></p>
+        <div class="history-scroll" tabindex="0" role="region" aria-label="Scrollable papers and patents timeline">{plot_svg(annual,annual_start,as_of,compact=bool(citations))}</div>
+        <p class="history-axis-note"><span>KR coverage: partial</span><span>* Through {as_of.strftime('%d %b %Y')}</span></p>
         <div class="history-selection-tools" hidden><p class="history-selection-status" role="status" aria-live="polite"></p><button type="button" class="history-close">Close selection ×</button></div>
         {details}
-        <p class="patent-coverage-note">Domestic (KR) coverage is incomplete and will be expanded. Patent symbols represent library records, not unique inventions or patent families.</p>
       </section>'''
     return f'''<section class="research-activity" id="research-activity" aria-labelledby="activity-heading">
       <div class="activity-intro"><div><p class="eyebrow">RESEARCH AT A GLANCE</p><h2 id="activity-heading">Ideas, built over time.</h2></div>
         <p>Research by Changwook Jeong and collaborators, across academic and industrial settings.</p></div>
       <div class="activity-stats">
         <div class="activity-stat"><strong>{paper_count}</strong><h3>Papers since {start}</h3><p>{counts['journals']} journal · {counts['conferences']} conference</p></div>
-        <div class="activity-stat"><strong>{patent_count}</strong><h3>Patent records since {start}</h3><p>Applications and grants · not unique inventions</p></div>
+        <div class="activity-stat"><strong>{patent_count}</strong><h3>Patent records since {start}</h3><p>Applications &amp; grants</p></div>
         <div class="activity-stat"><strong>{len(recent_papers)}</strong><h3>Papers in the past 12 months</h3><p><a href="#research-heading">Explore the latest research ↓</a></p></div>
         <div class="activity-stat"><strong>{directions}</strong><h3>Connected research areas</h3><p>Materials · devices · memory · AI</p></div>
       </div>
       {earlier_summary}
       <div class="history-heading"><div><p class="eyebrow">{annual_start} → {as_of.year} · ANNUAL OUTPUT</p><h2>Research at UNIST</h2></div>
         <p class="annual-totals">{len(annual['papers'])} papers <span>·</span> {len(annual['patents'])} patent records</p></div>
-      <p class="history-period-note">By record year since joining UNIST in {annual_start}; some records may reflect work begun earlier.</p>
-      {trend}
-      <p class="activity-method">Counts come from our publication library and update with the bibliography. Papers exclude invited talks, books and patents. The {start}–{annual_start-1} period is summarized cumulatively, not plotted as an annual data point; annual charts start in {annual_start}. Patent years follow each library record, which may represent an application, publication or grant; national counterparts and related records may be counted separately. These are not patent-family counts or a measure of current legal status. No first-online date, filing date or priority date is inferred.</p>
-      <a class="activity-library-link" href="../" target="_blank" rel="noopener">Browse the full publication and patent library ↗</a>
+      {'<div class="trend-comparison">' + trend + citation_section(citations,annual_start,as_of.year) + '</div>' if citations else trend}
+      <details class="activity-method disclosure-note"><summary>About these figures</summary>
+      <p>Counts come from our publication library and update with the bibliography. Papers exclude invited talks, books and patents. The {start}–{annual_start-1} period is summarized cumulatively, not plotted as an annual data point; annual charts start in {annual_start}. By record year since joining UNIST in {annual_start}; some records may reflect work begun earlier. Industrial research output is not fully reflected in public records.</p>
+      <p>Domestic (KR) coverage is incomplete and will be expanded. Patent records include applications and grants, not unique inventions or patent families. Patent years follow each library record, which may represent an application, publication or grant; national counterparts and related records may be counted separately. These are not patent-family counts or a measure of current legal status. No first-online date, filing date or priority date is inferred.</p></details>
+      <a class="activity-library-link" href="../" target="_blank" rel="noopener">Publication &amp; patent library ↗</a>
     </section>'''

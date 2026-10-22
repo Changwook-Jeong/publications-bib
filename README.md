@@ -61,8 +61,10 @@ The Pages workflow rebuilds the site whenever the bibliography, role metadata, g
 
 The separate preview is at `https://changwook-jeong.github.io/publications-bib/research-preview/`.
 Append `?embed=1` to hide the standalone masthead, hero and footer. This is a public GitHub
-Pages preview with `noindex`, not a private page. It is not linked from or embedded
-in the live Google Sites homepage yet, and the current publications page is unchanged.
+Pages page with `noindex`, not a private page. Its `?embed=1` view is embedded
+in the live Google Sites homepage. Changes pushed to that existing Pages path can
+therefore change the live Home without pressing Google Sites Publish: do not deploy
+review-only changes to the production path.
 
 ```powershell
 python scripts/build_publications.py --output _site
@@ -126,8 +128,8 @@ node --test tests/activity.test.cjs
 
 ## Research activity since 2007
 
-The research preview adds a bibliography-derived statistics strip and a paired
-Papers / Patents timeline. This does not change the Google Sites pages.
+The research page adds a bibliography-derived statistics strip and a paired
+Papers / Patents timeline, also visible through the Google Sites Home embed.
 
 - Papers include journal and conference records from 2007 through the build date;
   invited talks, books and patents are excluded from paper counts.
@@ -151,6 +153,40 @@ Papers / Patents timeline. This does not change the Google Sites pages.
 - No university export, unpublished application, internal ID or management status
   is copied into this repository. The supplied domestic export has not been imported.
 
-The current user requested no computer-use actions. Validation for this update
-uses Python data/SVG/HTML tests and Node interaction-controller tests without
-controlling a browser or Zotero. Browser layout QA is deferred.
+## Citation + search-readiness release (approved 22 October 2026)
+
+`citation-metrics.json` stores rounded annual estimates transcribed from the
+Google Scholar screenshot supplied by the PI. The screenshot capture date is
+unknown; `provided_on` is only the date received. These are profile-wide annual
+citations, not citations to UNIST-group papers alone, and not cumulative citations.
+2026 is partial-year. Missing years are omitted, never invented as zero. This data
+is not live-synced and is independent of the bibliography/author-role workflow.
+
+The new panel uses a separate citation scale beside the paired paper/patent chart.
+It stacks below that chart on small screens. Approximate values, provenance,
+coverage and a direct Scholar link remain visible or accessible in a data table.
+
+For an isolated full-Home proposal that does not update either public site:
+
+```powershell
+python scripts/build_home_preview.py --as-of 2026-10-22 --output <local-preview-directory>
+python -m http.server 8766 --bind 127.0.0.1 --directory <local-preview-directory>
+```
+
+The Home layout places PI/group identity and direct selected-paper links outside
+the iframe. The standalone Explorer also contains that content; embed mode hides
+the duplicate identity block. Keep the identity/source content in
+native Google Sites text, not only another embed. No PI title, institutional role,
+source citation or scientific finding is inferred from a metric.
+
+Research pages now have canonical URLs and factual citation/ScholarlyArticle
+metadata. Overview identity metadata matches visible text. Every preview and
+unreviewed detail explanation stays `noindex, nofollow` by default. The explicit
+`build_explorer.py --index-overview` release opt-in changes only the overview;
+detail explanations still remain noindex. The user approved the overview and CI
+now enables that opt-in. No author-review status is inferred or changed.
+Structured data is a factual aid, not a guarantee of indexing or AI citations.
+
+Long methodology, citation provenance and date/coverage notes are collapsed by
+default. The visible overview retains short approximate/partial-year labels,
+PI citation scope, partial KR coverage and AI-summary review status.
